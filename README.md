@@ -340,21 +340,404 @@ function validateFilm(film) {
 
 ---
 
-### Acceptation de risque
+**test sur notre application**
 
-Avant la mise en place des mécanismes de validation des données et de vérification après transaction,  nos bases de données étaient vulnérables aux injections d'objets malveillants. Cela aurait pu entraîner la corruption des données, un dysfonctionnement de l'application, et dans le cas de l'application médicale, une violation de la confidentialité des patients.
+### III. Tests avec des objets statiques
 
-**Dans l'application médicale**, cela aurait eu un impact direct sur la sécurité des données sensibles, ainsi qu'un risque de non-conformité avec les réglementations sur la protection des données médicales.
+Pour démontrer l'importance de la validation, nous avons créé trois tests distincts avec des objets statiques pour montrer le comportement de l'application dans différents cas.
 
-**Dans l'application de films**, bien que l'impact soit moins critique que dans un contexte médical, cela aurait pu nuire à l'expérience utilisateur en affichant des informations incorrectes ou corrompues.
+#### 1. Premier test : Objet valide sans validation
 
-Grâce à l'implémentation de **validations strictes**, de **gestion des erreurs**, et de **vérifications après transaction**, le risque d'injection de données malveillantes a été réduit à un niveau acceptable. Le risque résiduel reste **faible** dans les deux cas et est désormais sous contrôle.
+Dans ce premier cas, nous utilisons un objet valide (le film **"Castle in the Sky"**) sans validation. L'objet est correctement stocké et affiché sans problème, car il ne contient aucune donnée malveillante.
+
+#### Code :
+```javascript
+let db;
+const dbName = "GhibliDB";
+const storeName = "films";
+
+// Fonction pour initialiser la base de données
+function initDB() {
+  const request = indexedDB.open(dbName, 1);
+  
+  request.onerror = function(event) {
+    console.error("Erreur d'ouverture de la base de données");
+  };
+
+  request.onsuccess = function(event) {
+    db = event.target.result;
+    testValidObject(); // Charger l'objet à l'initialisation
+  };
+
+  request.onupgradeneeded = function(event) {
+    db = event.target.result;
+    db.createObjectStore(storeName, { keyPath: "id" });
+  };
+}
+
+// Fonction pour stocker les films dans IndexedDB
+function storeFilms(films) {
+  const transaction = db.transaction([storeName], "readwrite");
+  const objectStore = transaction.objectStore(storeName);
+  
+  films.forEach(film => {
+    const request = objectStore.put(film);
+    request.onerror = function(event) {
+      console.error("Erreur de stockage du film :", film.title);
+    };
+    request.onsuccess = function(event) {
+      console.log("Film stocké avec succès :", film.title);
+      displayFilms([film]); // Afficher le film stocké
+    };
+  });
+}
+
+// Fonction pour afficher les films
+function displayFilms(films) {
+  const container = document.createElement('div');
+  container.setAttribute('class', 'container');
+
+  films.forEach(movie => {
+    const card = document.createElement('div');
+    card.setAttribute('class', 'card');
+
+    const h1 = document.createElement('h1');
+    h1.textContent = movie.title;
+
+    const img = document.createElement('img');
+    img.src = movie.image;
+    img.alt = movie.title;
+
+    const p = document.createElement('p');
+    movie.description = movie.description.substring(0, 300);
+    p.textContent = `${movie.description}...`;
+
+    card.appendChild(h1);
+    card.appendChild(img);
+    card.appendChild(p);
+    container.appendChild(card);
+  });
+
+  document.getElementById('root').appendChild(container);
+}
+
+// Test d'un objet (sans validation)
+function testValidObject() {
+  const validFilm = {
+    id: "2baf70d1-42bb-4437-b551-e5fed5a87abe",
+    title: "Castle in the Sky",
+    original_title: "天空の城ラピュタ",
+    original_title_romanised: "Tenkū no shiro Rapyuta",
+    image: "https://image.tmdb.org/t/p/w600_and_h900_bestv2/npOnzAbLh6VOIu3naU5QaEcTepo.jpg",
+    movie_banner: "https://image.tmdb.org/t/p/w533_and_h300_bestv2/3cyjYtLWCBE1uvWINHFsFnE8LUK.jpg",
+    description: "The orphan Sheeta inherited a mysterious crystal that links her to the mythical sky-kingdom of Laputa...",
+    director: "Hayao Miyazaki",
+    producer: "Isao Takahata",
+    release_date: "1986",
+    running_time: "124",
+    rt_score: "95",
+    people: [
+      "https://ghibliapi.vercel.app/people/598f7048-74ff-41e0-92ef-87dc1ad980a9",
+      "https://ghibliapi.vercel.app/people/fe93adf2-2f3a-4ec4-9f68-5422f1b87c01"
+    ],
+    species: [
+      "https://ghibliapi.vercel.app/species/af3910a6-429f-4c74-9ad5-dfe1c4aa04f2"
+    ],
+    locations: [
+      "https://ghibliapi.vercel.app/locations/"
+    ],
+    vehicles: [
+      "https://ghibliapi.vercel.app/vehicles/4e09b023-f650-4747-9ab9-eacf14540cfb"
+    ],
+    url: "https://ghibliapi.vercel.app/films/2baf70d1-42bb-4437-b551-e5fed5a87abe"
+  };
+
+  // Stocker et afficher l'objet (sans validation)
+  storeFilms([validFilm]);
+}
+
+// Initialiser la base de données au chargement de la page
+window.onload = function() {
+  initDB();
+};
+
+```
+![db3](https://github.com/user-attachments/assets/ddcb48e5-80c3-448a-bb7d-b8f3bdf813a3)
+
+![db4](https://github.com/user-attachments/assets/5f3f75c6-f514-4216-9a1e-4eb65dc56868)
+
+
+
+#### Explication :
+- **Aucun problème** : Puisque l'objet est valide, il est correctement stocké et affiché sans risque de sécurité.
+  
+#### 2. Deuxième test : Objet malveillant sans validation
+
+Dans ce test, nous injectons un objet malveillant sans validation. L'objet contient du code JavaScript dans l'attribut `onerror` de l'image, déclenchant une attaque **XSS** lorsque l'image ne se charge pas.
+
+#### Code :
+```javascript
+let db;
+const dbName = "GhibliDB";
+const storeName = "films";
+
+// Fonction pour initialiser la base de données
+function initDB() {
+  const request = indexedDB.open(dbName, 1);
+  
+  request.onerror = function(event) {
+    console.error("Erreur d'ouverture de la base de données");
+  };
+
+  request.onsuccess = function(event) {
+    db = event.target.result;
+    testMaliciousObject(); // Charger l'objet malveillant sans validation
+  };
+
+  request.onupgradeneeded = function(event) {
+    db = event.target.result;
+    db.createObjectStore(storeName, { keyPath: "id" });
+  };
+}
+
+// Fonction pour stocker les films dans IndexedDB
+function storeFilms(films) {
+  const transaction = db.transaction([storeName], "readwrite");
+  const objectStore = transaction.objectStore(storeName);
+  
+  films.forEach(film => {
+    const request = objectStore.put(film);
+    request.onerror = function(event) {
+      console.error("Erreur de stockage du film :", film.title);
+    };
+    request.onsuccess = function(event) {
+      console.log("Film stocké avec succès :", film.title);
+      displayFilms([film]); // Afficher le film stocké
+    };
+  });
+}
+
+// Fonction pour afficher les films (XSS sera déclenché ici)
+function displayFilms(films) {
+  const container = document.createElement('div');
+  container.setAttribute('class', 'container');
+
+  films.forEach(movie => {
+    const card = document.createElement('div');
+    card.setAttribute('class', 'card');
+
+    const h1 = document.createElement('h1');
+    h1.textContent = movie.title;
+
+    const p = document.createElement('p');
+    movie.description = movie.description.substring(0, 300);
+    p.textContent = `${movie.description}...`;
+
+    // Ici l'attaque XSS est injectée via onerror
+    const img = document.createElement('img');
+    img.src = movie.image;  // L'image ne sera pas chargée, et onerror sera déclenché
+    img.alt = movie.title;
+    img.onerror = function() {
+      eval(movie.onErrorScript);  // Injection du script malveillant via onerror
+    };
+
+    card.appendChild(h1);
+    card.appendChild(img);
+    card.appendChild(p);
+    container.appendChild(card);
+  });
+
+  document.getElementById('root').appendChild(container);
+}
+
+// Test d'un objet malveillant sans validation
+function testMaliciousObject() {
+  const maliciousFilm = {
+    id: "123",  // ID fictif
+    title: "Malicious Movie",  // Titre malveillant
+    release_date: "2021",  // Date valide
+    image: "invalid_image.jpg",  // Image invalide pour déclencher onerror
+    onErrorScript: "alert('XSS Injection via onerror!')",  // Script injecté via onerror
+    description: "site non securise attempts XSS.",
+    url: "https://example.com/malicious-movie"  // URL correcte mais l'image est malveillante
+  };
+
+  console.log("Tentative de stockage d'un objet malveillant sans validation.");
+  storeFilms([maliciousFilm]); // Stocker et afficher l'objet malveillant sans validation
+}
+
+// Initialiser la base de données au chargement de la page
+window.onload = function() {
+  initDB();
+};
+
+```
+
+#### Explication :
+- **XSS déclenché** : L'attribut `onerror` est utilisé pour déclencher une alerte JavaScript malveillante. Sans validation, l'application est vulnérable et permet à ce script de s'exécuter.
+
+- ![db5](https://github.com/user-attachments/assets/520abf4f-7cde-415c-aa3e-faf89dbaac4f)
+
+  
+#### 3. Troisième test : Objet malveillant avec validation (protection contre XSS)
+
+Dans ce dernier test, nous utilisons un objet malveillant similaire, mais cette fois avec validation. L'objet est rejeté avant d'être stocké ou affiché, protégeant l'application contre les attaques XSS.
+
+#### Code :
+```javascript
+let db;
+const dbName = "GhibliDB";
+const storeName = "films";
+
+// Fonction pour initialiser la base de données
+function initDB() {
+  const request = indexedDB.open(dbName, 1);
+  
+  request.onerror = function(event) {
+    console.error("Erreur d'ouverture de la base de données");
+  };
+
+  request.onsuccess = function(event) {
+    db = event.target.result;
+    testMaliciousObject(); // Charger l'objet malveillant avec validation
+  };
+
+  request.onupgradeneeded = function(event) {
+    db = event.target.result;
+    db.createObjectStore(storeName, { keyPath: "id" });
+  };
+}
+
+// Fonction pour stocker les films dans IndexedDB
+function storeFilms(films) {
+  const transaction = db.transaction([storeName], "readwrite");
+  const objectStore = transaction.objectStore(storeName);
+  
+  films.forEach(film => {
+    const request = objectStore.put(film);
+    request.onerror = function(event) {
+      console.error("Erreur de stockage du film :", film.title);
+    };
+    request.onsuccess = function(event) {
+      console.log("Film stocké avec succès :", film.title);
+      displayFilms([film]); // Afficher le film stocké
+    };
+  });
+}
+
+// Fonction pour afficher les films (avec validation des données)
+function displayFilms(films) {
+  const container = document.createElement('div');
+  container.setAttribute('class', 'container');
+
+  films.forEach(movie => {
+    const card = document.createElement('div');
+    card.setAttribute('class', 'card');
+
+    const h1 = document.createElement('h1');
+    h1.textContent = movie.title;
+
+    const p = document.createElement('p');
+    movie.description = movie.description.substring(0, 300);
+    p.textContent = `${movie.description}...`;
+
+    const img = document.createElement('img');
+    img.src = movie.image;  // L'image sera affichée si elle est valide
+    img.alt = movie.title;
+
+    card.appendChild(h1);
+    card.appendChild(img);
+    card.appendChild(p);
+    container.appendChild(card);
+  });
+
+  document.getElementById('root').appendChild(container);
+}
+
+// Fonction de validation des films avant stockage dans IndexedDB
+function validateFilm(film) {
+  const releaseYearRegex = /^\d{4}$/;
+  const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
+
+  // Validation de l'ID
+  if (!film.id || typeof film.id !== 'string' || film.id.trim().length === 0) {
+    console.error("L'ID du film est invalide ou manquant.");
+    return false;
+  }
+
+  // Validation du titre
+  if (!film.title || typeof film.title !== 'string' || film.title.trim().length === 0) {
+    console.error("Le titre du film est invalide ou manquant.");
+    return false;
+  }
+
+  // Validation de la date de sortie (année)
+  if (!releaseYearRegex.test(film.release_date)) {
+    console.error("La date de sortie du film est invalide.");
+    return false;
+  }
+
+  // Validation des URLs (image et URL du film)
+  if (!urlRegex.test(film.image) || !urlRegex.test(film.url)) {
+    console.error("L'URL de l'image ou du film est invalide.");
+    return false;
+  }
+
+  // Interdire tout script ou injection dans onerror
+  if (film.onErrorScript && /<script>|javascript:|eval\(/.test(film.onErrorScript)) {
+    console.error("Script malveillant détecté dans onErrorScript.");
+    return false;
+  }
+
+  // Si toutes les validations passent
+  return true;
+}
+
+// Test d'un objet malveillant avec validation
+function testMaliciousObject() {
+  const maliciousFilm = {
+    id: "123",  // ID fictif
+    title: "Malicious Movie",  // Titre malveillant
+    release_date: "2021",  // Date valide
+    image: "invalid_image.jpg",  // Image invalide pour déclencher onerror
+    onErrorScript: "alert('XSS Injection via onerror!')",  // Script injecté via onerror
+    description: "This is a malicious movie object that attempts XSS.",
+    url: "https://example.com/malicious-movie"  // URL correcte mais l'image est malveillante
+  };
+
+  // Valider l'objet malveillant
+  if (validateFilm(maliciousFilm)) {
+    console.log("L'objet malveillant a été validé (ceci ne devrait pas se produire).");
+    storeFilms([maliciousFilm]); // Stocker et afficher l'objet malveillant si validé
+  } else {
+    console.log("L'objet malveillant a été rejeté par la validation.");
+  }
+}
+
+// Initialiser la base de données au chargement de la page
+window.onload = function() {
+  initDB();
+};
+
+```
+
+#### Explication :
+- **Validation efficace** : Le code JavaScript injecté est détecté et bloqué. L'objet malveillant n'est pas stocké ni affiché, et l'application reste sécurisée.
+
+- ![db6](https://github.com/user-attachments/assets/c27477cb-6cd5-4723-8920-a806f5d4c06d)
+
 
 ---
 
-### Conclusion
+avec cette série de tests on a démontré l'importance de la validation des données dans notre application web, en particulier pour prévenir les attaques **XSS**. Les objets non validés peuvent introduire des failles de sécurité importantes, comme l'exécution de code JavaScript malveillant via des attributs comme `onerror`. La validation stricte permet de garantir que seules des données sûres et valides sont traitées, stockées, et affichées dans l'application.
 
-L'usage d'**IndexedDB** offre une solution puissante pour le stockage local des données dans nos applications médicales et de films. Cependant, des **mesures de sécurité rigoureuses** doivent être mises en place pour prévenir les risques d'injections malveillantes. En appliquant des contrôles stricts, tels que la validation des données et la surveillance des transactions, nous avons considérablement réduit les risques et garanti la sécurité et la fiabilité de nos applications. Le risque résiduel est faible et accepté dans les deux contextes.
+### Acceptation de risque
+
+Avant la mise en place des mécanismes de validation des données,  nos bases de données étaient vulnérables aux injections d'objets malveillants. Cela aurait pu entraîner la corruption des données, un dysfonctionnement de l'application, et dans le cas de l'application médicale, une violation de la confidentialité des patients.
+cela aurait eu un impact direct sur la sécurité des données sensibles, ainsi qu'un risque de non-conformité avec les réglementations sur la protection des données médicales.
+
+---
+
 
 
 
