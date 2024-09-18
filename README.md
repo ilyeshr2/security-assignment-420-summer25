@@ -172,7 +172,7 @@ Ajoutez la ligne suivante pour indiquer qu'une authentification par mot de passe
 ServerName tpiliesharrache.grasset
 
 serverAdmin ilies@localhost
-DocumentRoot /var/www/c/public_html
+DocumentRoot /var/www/public_html
 
 <Directory "/var/www/tpiliesharrache/public_html">
   AllowOverride AuthConfig
