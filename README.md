@@ -66,15 +66,20 @@ Nous avons identifié six principaux risques pour l’application, ainsi que des
 
 #### a) **Attaque par force brute sur le formulaire de connexion**
 
+##	** Tableau d’analyse de risque ** 
+
 | **Menace**                                                                                         | **Actifs menacés**                                | **Vulnérabilité**                                                                                                | **Impact (gravité)**                                                       | **Probabilité**  | **Contrôles suggérés**                                                                                 |
 |----------------------------------------------------------------------------------------------------|--------------------------------------------------|------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------|------------------|---------------------------------------------------------------------------------------------------------|
 | Attaque par force brute sur les mots de passe pour accéder aux comptes utilisateurs (patients, médecins) | Informations personnelles et dossiers médicaux des patients | Absence de limitation de tentatives de connexion (pare-feu), absence de verrouillage de compte après plusieurs échecs.       | parce que nous parlons de données médicales, l'impact est très élevé (réputation de la clinique, confidentialité des données)         | Élevée           | - Utilisation d’un pare-feu (pfSense) pour limiter les tentatives répétées. |
 
   
-**Contrôle technique** : Mise en place d'un **pare-feu pfSense** pour limiter les tentatives de connexion à partir de la même adresse IP, ainsi qu'un **verrouillage automatique** après plusieurs tentatives échouées. De plus, utilisation d'une **authentification multi-facteurs (MFA)** pour rendre l'accès aux comptes plus sécurisé.
+##	**Tableau de contrôle implémenté** 
 
-- **Risque initial** : Très élevé.
-- **Risque résiduel après contrôle** : Faible (probabilité diminuée, mais non éliminée).
+| **Menace**                                                                                         | **Contrôle**                                                                                                                                      | **Risque initial** | **Risque résiduel après contrôle**                                                   |
+|----------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|--------------------------------------------------------------------------------------|
+| Attaque par force brute sur les mots de passe pour accéder aux comptes utilisateurs (patients, médecins) | Mise en place d'un pare-feu pfSense pour limiter les tentatives de connexion et verrouillage automatique après plusieurs échecs. Utilisation de l'authentification multi-facteurs (MFA). | Très élevé        | Faible (probabilité diminuée, mais toujours présente, avec une sécurité renforcée)   |
+
+Ce tableau présente clairement la menace, le contrôle technique appliqué, ainsi que l'évolution du risque avant et après la mise en place du contrôle.
 
 #### b) **Vol de données sensibles via des failles d’injection SQL**
 - **Menace** : Les attaquants peuvent exploiter une vulnérabilité dans les formulaires de l’application pour injecter des requêtes SQL malveillantes et voler des données.
