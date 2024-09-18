@@ -538,7 +538,7 @@ function displayFilms(films) {
     img.src = movie.image;  // L'image ne sera pas chargée, et onerror sera déclenché
     img.alt = movie.title;
     img.onerror = function() {
-      eval(movie.onErrorScript);  // Injection du script malveillant via onerror
+        alert('XSS Injection via onerror!');  // Injection du script malveillant via onerror
     };
 
     card.appendChild(h1);
@@ -553,13 +553,12 @@ function displayFilms(films) {
 // Test d'un objet malveillant sans validation
 function testMaliciousObject() {
   const maliciousFilm = {
-    id: "123",  // ID fictif
-    title: "Malicious Movie",  // Titre malveillant
-    release_date: "2021",  // Date valide
-    image: "invalid_image.jpg",  // Image invalide pour déclencher onerror
-    onErrorScript: "alert('XSS Injection via onerror!')",  // Script injecté via onerror
+    id: "123",  
+    title: "Malicious Movie",  
+    release_date: "2021",  
+    image: "invalid_image.jpg",  
     description: "site non securise attempts XSS.",
-    url: "https://example.com/malicious-movie"  // URL correcte mais l'image est malveillante
+    url: "https://example.com/malicious-movie"  
   };
 
   console.log("Tentative de stockage d'un objet malveillant sans validation.");
@@ -576,7 +575,8 @@ window.onload = function() {
 #### Explication :
 - **XSS déclenché** : L'attribut `onerror` est utilisé pour déclencher une alerte JavaScript malveillante. Sans validation, l'application est vulnérable et permet à ce script de s'exécuter.
 
-- ![db5](https://github.com/user-attachments/assets/520abf4f-7cde-415c-aa3e-faf89dbaac4f)
+- ![db5](https://github.com/user-attachments/assets/dbbe0a5c-6ed8-4c6d-b3fd-3ef84457ee8a)
+  
 
   
 #### 3. Troisième test : Objet malveillant avec validation (protection contre XSS)
