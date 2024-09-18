@@ -236,26 +236,129 @@ sudo systemctl restart apache2
 
 ---
 
-### **Conclusion : Sécurisation de l'accès**
-En suivant ces étapes, vous avez mis en place une authentification par mot de passe pour restreindre l'accès à certaines parties de votre site web. Ce mécanisme permet de protéger les fichiers sensibles ou les données de vos utilisateurs en empêchant tout accès non autorisé.
+Finalement : on a accepté le risque résiduel.
 
 --- 
 
-Cette version formalisée est plus adaptée à un contexte professionnel et peut être utilisée dans des rapports ou des guides de mise en œuvre pour des clients ou des équipes techniques.
+
+
+### c) Analyse de risque et contrôle pour la sécurité des données dans IndexedDB
+
+
+Dans notre **application médicale**, nous stockons des données sensibles dans **IndexedDB**, telles que des informations de rendez-vous, des profils de patients, et d'autres données médicales critiques. L'une des menaces majeures est l'injection de données malveillantes ou corrompues dans la base de données, ce qui pourrait compromettre l'intégrité des informations sensibles stockées localement.
+
+#### Tableau d’analyse de risque :
+
+| **Menace**                                                                                         | **Actifs menacés**                                           | **Vulnérabilité**                                                                                                      | **Impact (gravité)**                                                                                                                                                         | **Probabilité**                                                                                                         | **Contrôles suggérés**                                                                                 |
+|----------------------------------------------------------------------------------------------------|-------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
+| Injections ou manipulations de données malveillantes dans IndexedDB                                | - Données sensibles (profils patients, historique médical) <br> - Intégrité de la base de données <br> - Fonctionnement de l'application | Absence de validation stricte des entrées et absence de mécanismes de vérification de l'intégrité des objets stockés dans IndexedDB | **Impact : Très élevé** <br> - Corruption des données sensibles <br> - Atteinte à la confidentialité des patients <br> - Violation des lois sur la protection des données médicales | **Probabilité : Moyenne** <br> Les injections malveillantes peuvent provenir de failles d'API ou d'entrées non sécurisées | - Validation stricte des données à l'entrée <br> - Contrôles après chaque transaction dans IndexedDB <br> - Chiffrement des données sensibles |
+
+---
+
+#### Tableau de contrôle implémenté :
+
+| **Menace**                                                                                         | **Contrôle**                                                                                                       | **Risque initial**                                                                                                                                                                                        | **Risque résiduel**                                                                                                                                                                                                                          |
+|----------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Injections ou manipulations de données malveillantes dans IndexedDB                                | Mise en place d'une validation stricte des données sensibles avant leur stockage dans IndexedDB et vérifications post-transaction | **Impact initial : Très élevé** <br> - Corruption des données médicales <br> - Violation de la confidentialité des patients <br> - Atteinte à la réputation de l'établissement <br> **Probabilité : Moyenne**                               | **Impact résiduel : Faible** <br> - Les contrôles et la validation réduisent le risque de corruption des données, mais il persiste un faible risque résiduel <br> **Probabilité : Faible** |
+
+---
+
+
+### Explication de la validation dans l'application de films
+
+Dans notre application de films, nous récupérons les informations depuis une API externe et les stockons dans IndexedDB. Chaque film comporte des informations critiques comme `id`, `title`, `description`, `release_date`, `image`, et `movie_banner`. Il est crucial de valider ces données avant leur insertion pour éviter que des données malveillantes ou corrompues ne compromettent l'application.
+
+
+### Exemple d'objet stocké dans IndexedDB :
+Un objet typique que nous stockons dans IndexedDB peut être une fiche de film provenant de l'API. Voici un exemple de cet objet :
+
+
+```javascript
+
+{
+  "id": "2baf70d1-42bb-4437-b551-e5fed5a87abe",
+  "title": "Castle in the Sky",
+  "original_title": "天空の城ラピュタ",
+  "original_title_romanised": "Tenkū no shiro Rapyuta",
+  "image": "https://image.tmdb.org/t/p/w600_and_h900_bestv2/npOnzAbLh6VOIu3naU5QaEcTepo.jpg",
+  "movie_banner": "https://image.tmdb.org/t/p/w533_and_h300_bestv2/3cyjYtLWCBE1uvWINHFsFnE8LUK.jpg",
+  "description": "The orphan Sheeta inherited a mysterious crystal that links her to the mythical sky-kingdom of Laputa...",
+  "director": "Hayao Miyazaki",
+  "producer": "Isao Takahata",
+  "release_date": "1986",
+  "running_time": "124",
+  "rt_score": "95",
+  "people": [
+    "https://ghibliapi.vercel.app/people/598f7048-74ff-41e0-92ef-87dc1ad980a9"
+  ],
+  "species": [
+    "https://ghibliapi.vercel.app/species/af3910a6-429f-4c74-9ad5-dfe1c4aa04f2"
+  ],
+  "locations": [
+    "https://ghibliapi.vercel.app/locations/"
+  ],
+  "vehicles": [
+    "https://ghibliapi.vercel.app/vehicles/4e09b023-f650-4747-9ab9-eacf14540cfb"
+  ],
+  "url": "https://ghibliapi.vercel.app/films/2baf70d1-42bb-4437-b551-e5fed5a87abe"
+}
+
+
+```
+
+
+**Exemple de validation des données des films avant stockage** :
+
+```javascript
+function validateFilm(film) {
+  const releaseYearRegex = /^\d{4}$/;
+  const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
+
+  if (!film.id || typeof film.id !== 'string') {
+    console.error("L'ID est invalide.");
+    return false;
+  }
+
+  if (!film.title || typeof film.title !== 'string' || film.title.trim().length === 0) {
+    console.error("Le titre est manquant ou invalide.");
+    return false;
+  }
+
+  if (!releaseYearRegex.test(film.release_date)) {
+    console.error("La date de sortie est invalide.");
+    return false;
+  }
+
+  if (!urlRegex.test(film.image) || !urlRegex.test(film.url)) {
+    console.error("L'URL de l'image ou du film est invalide.");
+    return false;
+  }
+
+  return true;
+}
+```
+
+---
+
+### Acceptation de risque
+
+Avant la mise en place des mécanismes de validation des données et de vérification après transaction,  nos bases de données étaient vulnérables aux injections d'objets malveillants. Cela aurait pu entraîner la corruption des données, un dysfonctionnement de l'application, et dans le cas de l'application médicale, une violation de la confidentialité des patients.
+
+**Dans l'application médicale**, cela aurait eu un impact direct sur la sécurité des données sensibles, ainsi qu'un risque de non-conformité avec les réglementations sur la protection des données médicales.
+
+**Dans l'application de films**, bien que l'impact soit moins critique que dans un contexte médical, cela aurait pu nuire à l'expérience utilisateur en affichant des informations incorrectes ou corrompues.
+
+Grâce à l'implémentation de **validations strictes**, de **gestion des erreurs**, et de **vérifications après transaction**, le risque d'injection de données malveillantes a été réduit à un niveau acceptable. Le risque résiduel reste **faible** dans les deux cas et est désormais sous contrôle.
+
+---
+
+### Conclusion
+
+L'usage d'**IndexedDB** offre une solution puissante pour le stockage local des données dans nos applications médicales et de films. Cependant, des **mesures de sécurité rigoureuses** doivent être mises en place pour prévenir les risques d'injections malveillantes. En appliquant des contrôles stricts, tels que la validation des données et la surveillance des transactions, nous avons considérablement réduit les risques et garanti la sécurité et la fiabilité de nos applications. Le risque résiduel est faible et accepté dans les deux contextes.
 
 
 
-#### c) **Attaque par déni de service (DDoS)**
-- **Menace** : Un groupe d’attaquants pourrait lancer une attaque par déni de service distribué (DDoS) pour rendre l’application indisponible, provoquant des pertes financières et impactant la réputation de la clinique.
-- **Actifs menacés** : Le site web et le service de prise de rendez-vous.
-- **Vulnérabilité** : Absence de protection contre les attaques volumétriques.
-- **Impact (gravité)** : Très élevé (perte de services critiques, perte de confiance des patients).
-- **Probabilité** : Moyenne.
 
-**Contrôle technique** : Installation d’un **Système de Détection et de Prévention d’Intrusion (IPS/IDS)** via **Snort**, qui surveille les comportements anormaux sur le réseau et bloque automatiquement les adresses IP suspectes.
-
-- **Risque initial** : Très élevé.
-- **Risque résiduel après contrôle** : Faible.
 
 #### d) **Interception de données sensibles lors des transmissions**
 - **Menace** : Lors des communications entre les patients et le serveur, des données sensibles peuvent être interceptées si elles ne sont pas chiffrées.
