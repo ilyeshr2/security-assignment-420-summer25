@@ -77,9 +77,10 @@ Nous avons identifié six principaux risques pour l’application, ainsi que des
 
 | **Menace**                                                                                         | **Contrôle**                                                                                                                                      | **Risque initial** | **Risque résiduel après contrôle**                                                   |
 |----------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|--------------------------------------------------------------------------------------|
-| Attaque par force brute sur les mots de passe pour accéder aux comptes utilisateurs (patients, médecins) | Mise en place d'un pare-feu pfSense pour limiter les tentatives de connexion et verrouillage automatique après plusieurs échecs. Utilisation de l'authentification multi-facteurs (MFA). | Très élevé        | Faible (probabilité diminuée, mais toujours présente, avec une sécurité renforcée)   |
+| Attaque par force brute sur les mots de passe pour accéder aux comptes utilisateurs (patients, médecins) | Mise en place d'un pare-feu pfSense  pour limiter le nombre de tentatives de connexion autorisées à partir d'une adresse IP. | Très élevé :
+Le risque initial est **très élevé** car il n'y a pas de limite sur les tentatives de connexion. donc un attaquant peut essayer un grand nombre de combinaisons de mots de passe jusqu'à ce qu'il réussisse. Les informations sensibles des patients, dont les dossiers médicaux, pourraient être compromises. **L'impact** sur la confidentialité, la réputation et les obligations légales de la clinique serait **très grave**.        | **Faible** (probabilité diminuée, mais toujours présente, avec une sécurité renforcée)   |
 
-Ce tableau présente clairement la menace, le contrôle technique appliqué, ainsi que l'évolution du risque avant et après la mise en place du contrôle.
+
 
 #### b) **Vol de données sensibles via des failles d’injection SQL**
 - **Menace** : Les attaquants peuvent exploiter une vulnérabilité dans les formulaires de l’application pour injecter des requêtes SQL malveillantes et voler des données.
