@@ -97,17 +97,65 @@ Nous avons identifié six principaux risques pour l’application, ainsi que des
 
 ## **4. Instalation du par-feu PfSense dans notre reseau**
 
-#### b) **Vol de données sensibles via des failles d’injection SQL**
-- **Menace** : Les attaquants peuvent exploiter une vulnérabilité dans les formulaires de l’application pour injecter des requêtes SQL malveillantes et voler des données.
-- **Actifs menacés** : Dossiers médicaux des patients.
-- **Vulnérabilité** : Absence de validation adéquate des entrées des utilisateurs.
-- **Impact (gravité)** : Très élevé (vol massif de données).
-- **Probabilité** : Moyenne.
+. **Acceder à l'interface Web de pfSense:**
+   - Accéder à `http://10.10.10.1`.
+   - Connection avec les identifiants d'administrateur (`admin`, `pfsense`).
 
-**Contrôle technique** : Utilisation d’une **validation stricte des entrées** et de requêtes préparées dans la base de données pour éviter les injections SQL. Utilisation d’un **Système de Détection d'Intrusion (Snort)** pour surveiller les tentatives d'injections malveillantes.
+2. **Acceder aux regles du par feu:**
+   - Aller à `Firewall` > `Rules` > `WAN`.
+     
+   - ![1](https://github.com/user-attachments/assets/0414d753-4723-418e-8a28-f715ceaf0006)
 
-- **Risque initial** : Élevé.
-- **Risque résiduel après contrôle** : Faible (avec les bonnes pratiques de développement et de monitoring).
+
+
+3. **Creer une nouvelle regle parfeu:**
+   - Click `Add`.
+   - **Action:** `Block`
+   - **interface:** `WAN`.
+   - **protocol:** `TCP`
+   - **Source:** 2048 `any`.
+   - **Destination:** `This firewall (self)`.
+   - **destination Port Range:** `SSH (22)`
+   - Click `Save`.
+![1](https://github.com/user-attachments/assets/0e823073-df18-40c3-bf50-10ce015ab344)
+![2](https://github.com/user-attachments/assets/d34af2a8-2ebb-4792-9dcf-0c74b910e01e)
+![3](https://github.com/user-attachments/assets/3c1a10c6-2ca0-4df9-8c6a-af0a3d59fa4b)
+
+
+Une fois que la règle est configurée, pfSense bloquera automatiquement les adresses IP qui ont tenté de se connecter de manière répétée et infructueuse à l'aide de mots de passe incorrects.
+
+**Finalement : on a accepté le risque résiduel.**
+
+---
+
+### b) **Authentification avec mot de passe**
+
+#### Tableau d’analyse de risque :
+
+| **Menace**                                                                                         | **Actifs menacés**                                           | **Vulnérabilité**                                                          | **Impact (gravité)**                                                                                                                                                                                                                             | **Probabilité**                                                                                                                                                        | **Contrôles suggérés**                                                                                                                                                                                                                      |
+|----------------------------------------------------------------------------------------------------|-------------------------------------------------------------|----------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Accès non authentifié pouvant entraîner le vol d'informations sensibles (dossiers médicaux) | - Données utilisateur <br> - Dossiers médicaux <br> - Informations personnelles | Absence de mécanisme d'authentification solide (nom d'utilisateur et mot de passe) | **Impact : Très élevé** <br> Le vol des données sensibles (dossiers médicaux) peut entraîner de graves répercussions : violation de la confidentialité des patients, impact sur la réputation de la clinique, pertes financières, poursuites judiciaires. | **Probabilité : Élevée** <br> En l'absence de mécanisme d'authentification, l'accès non autorisé devient facile, augmentant significativement le risque de vol de données. | Mettre en place une **authentification solide** avec nom d'utilisateur et mot de passe, et activer des mesures supplémentaires comme l'authentification multi-facteurs (MFA). |
+
+---
+
+#### Tableau de contrôle implémenté :
+
+| **Menace**                                                                                         | **Contrôle**                                                                                   | **Risque initial**                                                                                                                                                                                    | **Risque résiduel**                                                                                                                                                                                                                         |
+|----------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Accès non authentifié pouvant entraîner le vol d'informations sensibles (dossiers médicaux) | Mettre en place une authentification solide (nom d'utilisateur et mot de passe), associée à l'authentification multi-facteurs (MFA) | **Impact initial** : Très élevé <br> - Fraude potentielle <br> - Violation de la confidentialité des patients <br> - Répercussions juridiques <br> - Impact direct sur la réputation et les revenus de la clinique. <br> **Probabilité : Très élevée** | **Impact résiduel** : Moyen <br> - Accès réduit aux données sensibles <br> - La fraude et la violation de données sont mieux contrôlées <br> **Probabilité : Moyenne** (grâce à l'authentification renforcée, mais le risque n'est pas complètement éliminé). |
+
+---
+
+#### **Risque de ne pas mettre en place une authentification par mot de passe** :  
+Sans authentification par mot de passe, les attaquants peuvent accéder facilement aux données sensibles stockées sur l'application, y compris les informations personnelles et médicales des patients, ainsi que les dossiers financiers. Cela expose l'application à de graves conséquences légales et à une atteinte majeure à sa réputation.
+
+#### **Le contrôle : Authentification avec nom d'utilisateur et mot de passe**  
+L'authentification avec nom d'utilisateur et mot de passe, combinée à une authentification multi-facteurs (MFA), améliore considérablement la sécurité des comptes utilisateurs. Cette mesure prévient l'accès non autorisé et réduit la probabilité de vol de données sensibles. Ce contrôle est essentiel pour assurer la sécurité et la confiance des utilisateurs dans l'application.
+
+#### **Acceptation de risque** :  
+Avant l’implémentation de l'authentification avec mot de passe et MFA, l'application web était extrêmement vulnérable, et le risque de vol de données était élevé, avec un impact potentiel négatif sur la réputation et les revenus de la clinique. Depuis l'implémentation du contrôle, le risque a été réduit à un niveau acceptable. Bien que la probabilité de risque ait diminué, elle n’a pas complètement disparu. Toutefois, elle est désormais considérée comme **moyenne**, ce qui est acceptable dans le cadre des activités de l’entreprise.
+
+---
 
 #### c) **Attaque par déni de service (DDoS)**
 - **Menace** : Un groupe d’attaquants pourrait lancer une attaque par déni de service distribué (DDoS) pour rendre l’application indisponible, provoquant des pertes financières et impactant la réputation de la clinique.
