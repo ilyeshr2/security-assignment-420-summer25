@@ -1,7 +1,6 @@
 # security-assignment-420-summer25
 
 
-Voici une version beaucoup plus détaillée et approfondie d’un rapport d’analyse de risque pour une application web dans le domaine médical, avec des explications et informations enrichies à chaque étape.
 
 ---
 
