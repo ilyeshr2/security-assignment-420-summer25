@@ -66,22 +66,36 @@ Nous avons identifié six principaux risques pour l’application, ainsi que des
 
 #### a) **Attaque par force brute sur le formulaire de connexion**
 
-##	** Tableau d’analyse de risque ** 
+##	**1. Tableau d’analyse de risque** 
 
 | **Menace**                                                                                         | **Actifs menacés**                                | **Vulnérabilité**                                                                                                | **Impact (gravité)**                                                       | **Probabilité**  | **Contrôles suggérés**                                                                                 |
 |----------------------------------------------------------------------------------------------------|--------------------------------------------------|------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------|------------------|---------------------------------------------------------------------------------------------------------|
 | Attaque par force brute sur les mots de passe pour accéder aux comptes utilisateurs (patients, médecins) | Informations personnelles et dossiers médicaux des patients | Absence de limitation de tentatives de connexion (pare-feu), absence de verrouillage de compte après plusieurs échecs.       | parce que nous parlons de données médicales, l'impact est très élevé (réputation de la clinique, confidentialité des données)         | Élevée           | - Utilisation d’un pare-feu (pfSense) pour limiter les tentatives répétées. |
 
   
-##	**Tableau de contrôle implémenté** 
+##	**2. Tableau de contrôle implémenté** 
 
 
 | **Menace**                                                                                         | **Contrôle**                                                                                                                                                 | **Risque initial**                                                                                                                                                                                                                      | **Risque résiduel après contrôle**                                                                                                                                                                                                                                                                               |
 |----------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Attaque par force brute sur les mots de passe pour accéder aux comptes utilisateurs (patients, médecins) | Mise en place d'un pare-feu pfSense  pour limiter le nombre de tentatives de connexion autorisées à partir d'une adresse IP. | **Très élevé** : <br> Le risque initial est **très élevé** car il n'y a pas de limite sur les tentatives de connexion. donc un attaquant peut essayer un grand nombre de combinaisons de mots de passe jusqu'à ce qu'il réussisse. Les informations sensibles des patients, dont les dossiers médicaux, pourraient être compromises. **L'impact** sur la confidentialité, la réputation et les obligations légales de la clinique serait **très grave**. | **Faible** : <br> (probabilité diminuée, mais toujours présente, avec une sécurité renforcée). Le risque est maintenant considéré comme acceptable. |
 
+##	**Le risque d’attaque force brute** 
 
+- Une attaque par force brute consiste à tester, l’une après l’autre, chaque combinaison possible d’un mot de passe pour un identifiant donné afin se connecter au service ciblé (les données médicaux dans notre cas).
+- Cette menace met en péril les informations medicales personnelles stockées sur notre site ainsi que la réputation et les revenus de notre entreprise.
 
+##	**Le contrôle : Pare-feu (PfSense)** 
+
+- Ces solutions peuvent bloquer ou ralentir considérablement les assauts, permettant nous de prendre des mesures proactives avant qu’une brèche ne soit exploitée.
+
+- PfSense, limitent le nombre de requêtes qu’un utilisateur peut faire à un service donné, empêchant ainsi les attaques automatisées de saturer les systèmes avec des tentatives de connexion incessantes.
+
+## **Acceptation de risque :**
+
+- Avant d'implémenter un pare-feu dans notre réseau, le risque de vol d'informations de nos patients était élevé, ce qui aurait pu avoir un impact négatif sur notre revenu et notre réputation d'entreprise. Depuis la mise en place de ce contrôle, la probabilité de risque a diminué, mais cela ne signifie pas qu'elle a été éliminée à 100%. La probabilité de risque est maintenant considérée comme moyenne, ce qui est acceptable pour l'entreprise.
+
+## **4. Instalation du par-feu PfSense dans notre reseau**
 
 #### b) **Vol de données sensibles via des failles d’injection SQL**
 - **Menace** : Les attaquants peuvent exploiter une vulnérabilité dans les formulaires de l’application pour injecter des requêtes SQL malveillantes et voler des données.
