@@ -65,11 +65,11 @@ Le personnel de la clinique, en particulier les administrateurs et médecins aya
 Nous avons identifié six principaux risques pour l’application, ainsi que des mesures de contrôle qui peuvent être mises en place pour atténuer ces risques. Voici une analyse détaillée de chacun des risques, leur probabilité, impact, et les contrôles mis en place pour les atténuer.
 
 #### a) **Attaque par force brute sur le formulaire de connexion**
-- **Menace** : Des attaquants peuvent essayer d’accéder aux comptes utilisateurs (patients et médecins) en lançant une attaque par force brute sur les mots de passe.
-- **Actifs menacés** : Informations personnelles et dossiers médicaux des patients.
-- **Vulnérabilité** : Absence de limitations de tentatives de connexion, absence de verrouillage de compte après plusieurs tentatives échouées.
-- **Impact (gravité)** : Très élevé (réputation de la clinique, confidentialité des données).
-- **Probabilité** : Élevée.
+
+| **Menace**                                                                                         | **Actifs menacés**                                | **Vulnérabilité**                                                                                                | **Impact (gravité)**                                                       | **Probabilité**  | **Contrôles suggérés**                                                                                 |
+|----------------------------------------------------------------------------------------------------|--------------------------------------------------|------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------|------------------|---------------------------------------------------------------------------------------------------------|
+| Attaque par force brute sur les mots de passe pour accéder aux comptes utilisateurs (patients, médecins) | Informations personnelles et dossiers médicaux des patients | Absence de limitation de tentatives de connexion, absence de verrouillage de compte après plusieurs échecs.       | Très élevé (réputation de la clinique, confidentialité des données)         | Élevée           | - Implémentation d'un verrouillage de compte après plusieurs tentatives échouées.<br>- Utilisation de l'authentification à deux facteurs (MFA).<br>- Utilisation d’un pare-feu (pfSense) pour limiter les tentatives répétées. |
+
   
 **Contrôle technique** : Mise en place d'un **pare-feu pfSense** pour limiter les tentatives de connexion à partir de la même adresse IP, ainsi qu'un **verrouillage automatique** après plusieurs tentatives échouées. De plus, utilisation d'une **authentification multi-facteurs (MFA)** pour rendre l'accès aux comptes plus sécurisé.
 
