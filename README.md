@@ -157,6 +157,94 @@ Avant l’implémentation de l'authentification avec mot de passe et MFA, l'appl
 
 ---
 
+### **Étapes pour la mise en place de l'authentification par mot de passe avec Apache**
+
+#### **1. Configuration du fichier de site Apache**
+Accédez au répertoire de configuration du site web et modifiez le fichier de configuration Apache correspondant au site à protéger (tpiliesharrache.grasset dans notre demonstration):
+
+```bash
+sudo vim /etc/apache2/sites-available/tpiliesharrache.conf
+```
+
+Ajoutez la ligne suivante pour indiquer qu'une authentification par mot de passe sera requise dans le répertoire :
+
+```apache
+ServerName tpiliesharrache.grasset
+
+serverAdmin ilies@localhost
+DocumentRoot /var/www/c/public_html
+
+<Directory "/var/www/tpiliesharrache/public_html">
+  AllowOverride AuthConfig
+</Directory>
+```
+
+Enregistrez les modifications et fermez le fichier `wq!`.
+
+![5](https://github.com/user-attachments/assets/3809b844-16ba-4ed2-ac3c-29b3cca2b6bc)
+
+
+#### **2. Création du fichier `.htaccess`**
+
+Dans le répertoire racine du site, créez un fichier `.htaccess`:
+
+```bash
+sudo vim /var/www/tpiliesharrache/public_html/.htaccess
+```
+
+Ajoutez les directives suivantes pour activer l’authentification et restreindre l’accès :
+
+```apache
+AuthType Basic
+AuthName "Zone sécurisée"
+AuthUserFile /var/www/tpiliesharrache/.htpasswd
+Require valid-user
+```
+
+Enregistrez et quittez (`wq!`).
+
+![6](https://github.com/user-attachments/assets/ae0171ce-7273-4c16-ace6-5bdd00ec77b2)
+
+
+#### **3. Création du fichier `.htpasswd`**
+Créez le fichier `.htpasswd` dans lequel seront stockés les noms d’utilisateur et les mots de passe.
+
+```bash
+sudo htpasswd -c /var/www/tpiliesharrache/.htpasswd ilies
+```
+
+- Le paramètre `-c` crée le fichier `.htpasswd` s'il n'existe pas déjà. Si vous ajoutez plusieurs utilisateurs, ne répétez pas l'option `-c` pour ne pas écraser les utilisateurs existants.
+
+on est invité à entrer un mot de passe pour l’utilisateur `ilies` dans mon cas jai choisi `123`.
+
+
+![12](https://github.com/user-attachments/assets/893fa017-2572-4ae1-bc4e-b05eb6143149)
+
+
+#### **4. Redémarrage d'Apache**
+Après avoir modifié la configuration et créé le fichier `.htpasswd`, on redémarre Apache pour appliquer les changements :
+
+```bash
+sudo systemctl restart apache2
+```
+
+![10](https://github.com/user-attachments/assets/d4b34893-851e-40a2-9a20-04f931a5ffbd)
+
+![11](https://github.com/user-attachments/assets/e88b92d5-5048-495d-a6f7-d1999cfd3e52)
+
+
+
+---
+
+### **Conclusion : Sécurisation de l'accès**
+En suivant ces étapes, vous avez mis en place une authentification par mot de passe pour restreindre l'accès à certaines parties de votre site web. Ce mécanisme permet de protéger les fichiers sensibles ou les données de vos utilisateurs en empêchant tout accès non autorisé.
+
+--- 
+
+Cette version formalisée est plus adaptée à un contexte professionnel et peut être utilisée dans des rapports ou des guides de mise en œuvre pour des clients ou des équipes techniques.
+
+
+
 #### c) **Attaque par déni de service (DDoS)**
 - **Menace** : Un groupe d’attaquants pourrait lancer une attaque par déni de service distribué (DDoS) pour rendre l’application indisponible, provoquant des pertes financières et impactant la réputation de la clinique.
 - **Actifs menacés** : Le site web et le service de prise de rendez-vous.
