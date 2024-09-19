@@ -967,17 +967,56 @@ Une fois installer, Vider le cache de votre navigateur et le redémarrer :.
 
 
 
-#### e) **Attaque par ransomware**
-- **Menace** : Les hackers peuvent chiffrer les données du serveur avec un ransomware et exiger une rançon pour restaurer l’accès.
-- **Actifs menacés** : Dossiers médicaux des patients, données administratives.
-- **Vulnérabilité** : Absence de sauvegardes fréquentes.
-- **Impact (gravité)** : Très élevé (paralysie du service, perte financière énorme).
-- **Probabilité** : Moyenne.
 
-**Contrôle technique** : Mise en place de **sauvegardes régulières** automatiques hors ligne. Des scripts automatisés de backup permettent de conserver une copie des données critiques.
+---
 
-- **Risque initial** : Élevé.
-- **Risque résiduel après contrôle** : Faible (sauvegarde régulière diminue considérablement le risque).
+### E) Fichier de sauvegarde (Backup) :
+
+#### Tableau d’analyse de risque :
+
+| Menace                              | Actif                              | Vulnérabilité                                                    | Impact (Évaluation de gravité)                                                                                                       | Probabilité (Évaluation de probabilité)                                      | Contrôles suggérés                                         |
+| ------------------------------------ | ---------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Attaque de Ransomware (Ransom-logiciel) | - Fonctionnement du site <br> - Données sensibles de l'entreprise | Absence de politiques de sécurité robustes et de sauvegardes régulières | Impact : Élevé <br> - Perte de productivité <br> - Perte de données critiques <br> - Atteinte à la réputation de l’entreprise <br> - Pertes financières importantes  | Probabilité : Moyenne <br> - Risque de paralysie totale du site en cas d’attaque de ransomware | - Implémentation de politiques de sauvegarde régulières <br> - Création de copies régulières et sécurisées des données sensibles de l'entreprise |
+
+---
+
+#### Tableau de contrôle implémenté :
+
+| Menace                              | Contrôle                                                                                          | Risque initial                                                                                                         | Risque résiduel                                      |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| Attaque de Ransomware (Ransom-logiciel) | Mise en place de politiques de sauvegarde (backups) pour créer des copies sécurisées des données | Impact initial : <br> - Perte de productivité <br> - Perte de données <br> - Dommages financiers et atteinte à la réputation | Impact résiduel : <br> - Réduction des temps d'arrêt <br> - Récupération plus rapide après une attaque <br> Impact : Moyen <br> Probabilité : Faible |
+
+---
+
+### Définition des sauvegardes (Backups) :
+
+Les **backups** sont des copies de sécurité des données essentielles de l’entreprise qui sont effectuées régulièrement pour prévenir la perte de données en cas d'événements imprévus, comme une attaque de ransomware, une défaillance matérielle ou une catastrophe naturelle. Les données sont stockées sur un support sécurisé (disque externe, cloud, etc.) et peuvent être restaurées en cas de sinistre.
+
+### Le risque de ne pas mettre en place des sauvegardes :
+
+Sans la mise en place de sauvegardes, l’entreprise s'expose à des risques graves. En cas d’attaque de ransomware, les attaquants peuvent chiffrer les données et en exiger une rançon pour les déverrouiller. Cela paralyserait le fonctionnement du site, causerait une perte d'accès aux données essentielles et aurait des conséquences financières et juridiques graves. La réputation de l’entreprise en serait également fortement affectée, car les clients perdraient confiance dans la capacité de l’entreprise à protéger leurs informations.
+
+### Le contrôle : Mise en place de sauvegardes régulières :
+
+En mettant en œuvre des scripts de sauvegarde réguliers, l’entreprise peut créer des copies de sécurité de ses données critiques, ce qui permet de restaurer l'intégrité des systèmes en cas d'attaque ou de panne. Les sauvegardes doivent être stockées dans des emplacements sécurisés (comme un cloud chiffré ou un serveur dédié) et testées régulièrement pour s'assurer qu'elles sont valides. Ce contrôle est essentiel pour assurer la continuité des activités et limiter les dégâts causés par une attaque.
+
+### Acceptation du risque :
+
+Avant l'implémentation des sauvegardes, l'application web et les données étaient vulnérables à toute attaque ou défaillance, augmentant considérablement le risque de perte de données critiques et d'interruption du site. Cela aurait eu des conséquences graves sur le chiffre d'affaires et la réputation de l’entreprise. Depuis la mise en place de ce contrôle, les impacts potentiels ont été atténués et la probabilité d'une perte de données est maintenant faible. Bien qu'il reste un risque résiduel, ce dernier est désormais acceptable pour l’entreprise.
+
+---
+
+### Remarque :
+
+Les sauvegardes sont une solution de protection contre plusieurs types de menaces, notamment :
+- **Les pannes matérielles** : Une défaillance matérielle peut entraîner la perte de données. Les sauvegardes permettent de restaurer les données après réparation.
+- **Attaques de ransomware** : Les attaquants qui chiffrent les données pour exiger une rançon n’ont plus de pouvoir si des sauvegardes existent.
+- **Catastrophes naturelles** : Les sauvegardes externes (cloud ou serveur distant) permettent de protéger les données en cas de sinistre physique.
+
+Il est crucial de tester régulièrement les sauvegardes pour garantir leur fiabilité. Ne pas vérifier les sauvegardes avant d'en avoir besoin peut entraîner des pertes supplémentaires en cas de problèmes avec les données de récupération.
+
+---
+
 
 #### f) **Phishing et erreurs humaines**
 - **Menace** : Le personnel pourrait être victime de phishing, entraînant des accès non autorisés aux dossiers des patients.
