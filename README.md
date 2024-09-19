@@ -11,7 +11,6 @@ L'application étudiée est une **plateforme de gestion de rendez-vous médicaux
 
 L'application gère des données médicales sensibles, incluant les informations personnelles des patients, leurs historiques médicaux, prescriptions, et résultats de tests médicaux. Elle offre des services payants aux cliniques en prélevant des frais pour la gestion de la plateforme et la facturation des rendez-vous.
 
-L'objectif de ce rapport est de réaliser une **analyse approfondie des risques** liés à cette application web, puis de proposer et d'implémenter des **mesures de sécurité techniques** pour rendre les risques résiduels acceptables.
 
 ### 2. **Cas d'utilisation théorique**
 Le site web est utilisé par des patients pour :
