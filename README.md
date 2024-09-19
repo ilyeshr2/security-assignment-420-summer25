@@ -11,23 +11,10 @@ L'application étudiée est une **plateforme de gestion de rendez-vous médicaux
 
 L'application gère des données médicales sensibles, incluant les informations personnelles des patients, leurs historiques médicaux, prescriptions, et résultats de tests médicaux. Elle offre des services payants aux cliniques en prélevant des frais pour la gestion de la plateforme et la facturation des rendez-vous.
 
+Le site web est utilisé par des patients pour prendre rendezvous avec des médecins, recevoir des notifications pour leurs rendez-vous et consulter leurs prescriptions électroniques et leur historique médical.
 
-### 2. **Cas d'utilisation théorique**
-Le site web est utilisé par des patients pour :
-- Prendre rendez-vous avec des médecins généralistes et spécialistes.
-- Recevoir des notifications pour leurs rendez-vous à venir.
-- Consulter leurs prescriptions électroniques et leur historique médical.
-- Obtenir des résultats d'examens médicaux (sanguins, radiologiques, etc.).
+Les utilisateurs de l'application sont les patients les médecins et les personnel administratif:
 
-Les **utilisateurs principaux** de l'application sont :
-- **Patients** : Ils se connectent pour gérer leurs rendez-vous et consulter leurs dossiers médicaux.
-- **Médecins** : Ils accèdent à l'historique médical des patients et mettent à jour les dossiers médicaux.
-- **Personnel administratif** : Ils gèrent les horaires des médecins et approuvent les nouvelles inscriptions des patients.
-
-**Exigences de sécurité critiques** :
-- **Confidentialité** : Les dossiers médicaux doivent être strictement confidentiels et accessibles uniquement par des utilisateurs autorisés.
-- **Disponibilité** : L’application doit être disponible 24h/24 pour permettre aux patients de gérer leurs rendez-vous en ligne.
-- **Intégrité** : Les données doivent être protégées contre toute altération non autorisée, intentionnelle ou accidentelle.
 
 ### 3. **Modélisation des menaces (Threat Model)**
 La modélisation des menaces est un processus crucial pour identifier les vulnérabilités potentielles et les menaces qui pourraient compromettre la sécurité de l'application. Voici les principales menaces identifiées :
