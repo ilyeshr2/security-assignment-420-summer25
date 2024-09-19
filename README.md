@@ -777,7 +777,195 @@ Avant la mise en place d’un certificat SSL, l'application web était vulnérab
 
 ---
 
-Cette section met en avant l'importance de la mise en place d'un **certificat SSL** pour garantir la confidentialité des données transmises entre les utilisateurs et les serveurs de l'application.
+### Mise en place d'un certificat SSL pour sécuriser notre site
+---
+
+### 1. Générer un certificat SSL auto-signé
+
+Sur notre serveur web Ubuntu, on va exécutez la commande suivante pour créer un certificat SSL auto-signé.
+
+```bash
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -addext "subjectAltName = DNS:tpiliesharrache.grasset" -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt
+```
+
+
+
+
+---
+
+### 2. Répondre aux questions OpenSSL
+
+il faut répondre à quelques questions. La question la plus importante est **Common Name**, où on va entrer le nom de notre site :
+
+```
+Common Name: tpiliesharrache.grasset
+```
+
+![ssl1](https://github.com/user-attachments/assets/13fabd2f-4374-46e8-872e-15287ec3747e)
+
+---
+
+### 3. Configurer les paramètres SSL d'Apache
+
+on va créez un fichier de configuration SSL pour Apache avec la commande suivante :
+
+```bash
+sudo vim /etc/apache2/conf-available/ssl-params.conf
+```
+
+et joutez le contenu suivant :
+
+```bash
+SSLCipherSuite EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH
+SSLProtocol All -SSLv2 -SSLv3 -TLSv1 -TLSv1.1
+SSLHonorCipherOrder On
+Header always set X-Frame-Options DENY
+Header always set X-Content-Type-Options nosniff
+# Requires Apache >= 2.4
+SSLCompression off
+SSLUseStapling on
+SSLStaplingCache "shmcb:logs/stapling-cache(150000)"
+# Requires Apache >= 2.4.11
+SSLSessionTickets Off
+```
+
+elle va désactiver les anciennes versions de SSL et TLS et configurer des en-têtes de sécurité supplémentaires.
+
+
+![ssl2](https://github.com/user-attachments/assets/e881877d-3fed-4a90-8e18-5bdbd82b7bb3)
+
+
+
+---
+
+### 4. Faire une copie de la configuration SSL par défaut
+
+Faites une copie de sauvegarde de la configuration SSL par défaut d'Apache :
+
+```bash
+sudo cp /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf.bak
+```
+
+---
+
+### 5. Modifier la configuration SSL
+
+modifier le fichier **default-ssl.conf** pour y insérer les informations de notre certificat et nom de domaine :
+
+```bash
+sudo vim /etc/apache2/sites-available/default-ssl.conf
+```
+
+Modifiez les parties suivantes :
+
+```bash
+        ServerName tpiliesharrache.grasset
+        DocumentRoot /var/www/tpiliesharrache/public_html
+
+        SSLCertificateFile      /etc/ssl/certs/apache-selfsigned.crt
+        SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
+```
+
+![ssl3](https://github.com/user-attachments/assets/9b070015-171d-4fa8-a4da-7951de5ca608)
+
+
+---
+
+### Étape 6 : Activer SSL et les modules requis dans Apache
+
+Activer le module SSL et les autres modules nécessaires dans Apache avec les commandes suivantes :
+
+```bash
+sudo a2enmod ssl
+sudo a2enmod headers
+sudo a2ensite default-ssl
+sudo a2enconf ssl-params
+```
+
+Ensuite, tester la configuration :
+
+```bash
+sudo apache2ctl configtest
+```
+
+on va ignorer l'avertissement suivant :
+
+```
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 127.0.1.1. Set the 'ServerName' directive globally to suppress this message
+Syntax OK
+```
+
+Enfin, redémarrez Apache pour appliquer les changements :
+
+```bash
+sudo systemctl restart apache2
+```
+
+
+![ssl5](https://github.com/user-attachments/assets/e723adcc-5f26-40f0-9d70-4ad5cc25a723)
+
+
+
+---
+
+### Étape 7 : Ouvrir le port 443 dans pfSense pour HTTPS
+
+Pour permettre l'accès au HTTPS sur le réseau, on doit ouvrir le port 443 dans pfSense.
+
+1. Connecter l'interface web de pfSense.
+2. Allez dans **Firewall > Rules**.
+3. Sous l'onglet **WAN**, ajouter une nouvelle règle :
+   - **Filter rule association** : Pass
+   - **Interface** : WAN
+   - **Protocol** : TCP
+   - **Destination Port Range** : HTTPS (443)
+   - **Redirect target port**: HTTPS
+   - **Redirect target IP**: 10.10.10.11 (ubuntu server) 
+4. click save.
+   
+
+![ssl4](https://github.com/user-attachments/assets/145aa7fd-c73a-436a-bec8-acd8badfa12c)
+
+
+
+---
+
+### Étape 8 : Tester le site dans Chrome
+
+Sur la machine locale, ouvrer **Google Chrome** et testez le site sécurisé en visitant :
+
+```
+https://tpiliesharrache.grasset
+```
+
+![ssl6](https://github.com/user-attachments/assets/10dbacdd-fff4-4eb0-9d7c-255e4fc91e19)
+
+
+---
+
+### Étape 9 : Installer le certificat localement
+
+
+![ssl8](https://github.com/user-attachments/assets/1e304b93-024a-4ad3-9494-14a7aa18a421)
+
+![ssl9](https://github.com/user-attachments/assets/81e1b1db-2ce8-4f21-ba69-f6ac370c907f)
+
+![ssl10](https://github.com/user-attachments/assets/6b60207e-12fa-49d5-8db5-88526cc1d631)
+
+![ssl11](https://github.com/user-attachments/assets/e0afc1fa-1326-4cba-b033-e8d5479995af)
+
+![ssl12](https://github.com/user-attachments/assets/db6efee8-475c-4996-9641-52f5a8a9747f)
+
+
+Une fois installer, Vider le cache de votre navigateur et le redémarrer :.
+
+---
+
+![ssl15](https://github.com/user-attachments/assets/6cdfd2cd-68ff-4d8b-a2d4-5aed2f9285f6)
+
+---
+
+
 
 #### e) **Attaque par ransomware**
 - **Menace** : Les hackers peuvent chiffrer les données du serveur avec un ransomware et exiger une rançon pour restaurer l’accès.
