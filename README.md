@@ -1017,24 +1017,162 @@ Il est crucial de tester régulièrement les sauvegardes pour garantir leur fiab
 
 ---
 
+### mis en place d'un Système de Sauvegarde Automatisé avec Apache
 
-#### f) **Phishing et erreurs humaines**
-- **Menace** : Le personnel pourrait être victime de phishing, entraînant des accès non autorisés aux dossiers des patients.
-- **Actifs menacés** : Données sensibles des patients.
-- **Vulnérabilité** : Manque de sensibilisation et de formation sur les risques de phishing.
-- **Impact (gravité)** : Élevé (fuite de données personnelles et médicales).
-- **Probabilité** : Moyenne.
 
-**Contrôle
 
- technique** : Organisation de **formations de sensibilisation** à la sécurité pour les employés afin de réduire le risque d'attaques par ingénierie sociale. Des protocoles de vérification rigoureux des emails entrants et une politique de sécurité renforcée sont également mis en place.
+Nous allons configurer Apache2 pour gérer le endpoint `/backup` en utilisant un script PHP qui pourra effectuer la tâche de sauvegarde.
 
-- **Risque initial** : Moyen à élevé.
-- **Risque résiduel après contrôle** : Faible.
+#### 1. creation du script backup PHP
 
-### 5. **Conclusion**
-En intégrant les mesures de sécurité détaillées ci-dessus, nous avons réduit de manière significative les risques critiques liés à l'application de gestion des rendez-vous médicaux. Les risques résiduels sont désormais gérables et conformes aux normes de sécurité recommandées dans le secteur de la santé. Toutefois, une surveillance constante et des audits réguliers doivent être mis en place pour garantir l'efficacité des contrôles.
+1. **creation du script backup**: 
+on va cree le fichier PHP `backup.php` qui sera déclenché lorsque le endpoint `/backup` sera appelé dans le repertoire `/var/www/tpiliesharrache/public_html`
 
----
+    - ```bash
+        sudo vim /var/www/tpiliesharrache/public_html/backup.php
 
-Cette version très complète inclut plus de détails techniques et pratiques, et approfondit chaque menace, contrôle, et résultat obtenu. Si vous avez besoin d'autres informations spécifiques ou de détails supplémentaires, je peux les intégrer.
+        ```
+À l'intérieur du fichier `backup.php`, on va ajoutez ce script :
+
+```php
+<?php
+header('Content-Type: application/json');
+
+$backupDir = '/var/www/tpiliesharrache/backups/';
+
+// Check if backup directory exists, if not, create it
+if (!file_exists($backupDir)) {
+    if (!mkdir($backupDir, 0755, true)) {
+        echo json_encode(['status' => 'error', 'message' => 'Failed to create backup directory.']);
+        exit;
+    }
+}
+
+// Get JSON data from request body
+$data = json_decode(file_get_contents('php://input'), true);
+
+if (!$data) {
+    echo json_encode(['status' => 'error', 'message' => 'No data received.']);
+    exit;
+}
+
+// Generate a filename with the current date and time
+$backupFile = $backupDir . 'backup_' . date('Y-m-d_H-i-s') . '.json';
+
+// Save the data to the backup file
+if (file_put_contents($backupFile, json_encode($data, JSON_PRETTY_PRINT))) {
+    echo json_encode(['status' => 'success', 'file' => $backupFile, 'message' => 'Backup has been saved successfully.']);
+} else {
+    echo json_encode(['status' => 'error', 'message' => 'Failed to save the backup file.']);
+}
+?>
+```
+
+- Le script vérifie si le répertoire de sauvegarde existe. Si ce n'est pas le cas, il tente de créer le répertoire avec les autorisations appropriées. Si la création du répertoire échoue, il renvoie une erreur
+- Les données du request body sont écrites dans un fichier JSON dans le répertoire /var/www/tpiliesharrache/backups/. Le nom de fichier inclut un timestamp pour garantir que chaque sauvegarde est unique.
+
+#### 3. Modifier la configuration Apache pour le endpoint `/backup`
+
+on va modifier le fichier de configuration :
+
+```bash
+sudo vim /etc/apache2/sites-available/tpiliesharrache.conf
+```
+
+À l'intérieur de `<VirtualHost>`, on va ajoutez la ligne suivante pour configurer le endpoint `/backup` :
+
+```apache
+<Directory /var/www/tpiliesharrache/public_html>
+    AllowOverride All
+    Options Indexes FollowSymLinks
+    Require all granted
+</Directory>
+
+# Enable PHP handling
+AddType application/x-httpd-php .php
+
+```
+
+Cela permet l'accès au répertoire `/backup` et autorise l'exécution du script PHP.
+
+#### 4. Redémarrer Apache
+
+Redémarrez le service Apache pour appliquer les modifications :
+
+```bash
+sudo systemctl restart apache2
+```
+
+#### 5. Mettre à jour JavaScript pour utiliser le endpoint Apache `/backup`
+
+Maintenant, dans le code JavaScript, on va ajouter la logique pour que le client envoi les informations au server (`/backup` endpoint):
+
+```javascript
+function backupData() {
+  // Fetch data from IndexedDB
+  const transaction = db.transaction([storeName, logoStoreName], "readonly");
+  const filmsStore = transaction.objectStore(storeName);
+  const logoStore = transaction.objectStore(logoStoreName);
+
+  const filmsRequest = filmsStore.getAll();
+  const logoRequest = logoStore.get("logo");
+
+  filmsRequest.onsuccess = function() {
+    const filmsData = filmsRequest.result;
+
+    logoRequest.onsuccess = function() {
+      const logoData = logoRequest.result;
+
+      // Send the data to the PHP backup script
+      fetch('/backup.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          films: filmsData,
+          logo: logoData
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Backup successful:', data);
+        alert('Backup successful!');
+      })
+      .catch(error => {
+        console.error('Erreur lors de la sauvegarde :', error);
+        alert('Backup failed: ' + error.message);
+      });
+    };
+
+    logoRequest.onerror = function() {
+      console.error("Erreur de récupération du logo pour la sauvegarde.");
+    };
+  };
+
+  filmsRequest.onerror = function() {
+    console.error("Erreur de récupération des films pour la sauvegarde.");
+  };
+}
+
+// Attach backup functionality to button
+document.getElementById('backupButton').addEventListener('click', function() {
+  backupData();
+});
+```
+
+### 6. Mettre a jour notre HTML pour utiliser un bouton pour envoyer les donner de notre site au endpoint `/backup`
+
+```html
+
+<body>
+  <button id="backupButton">Sauvegarder les données</button>
+  <div id="root"></div>
+
+  <script src="script.js"></script>
+</body>
+
+```
+
+
+###Finalement : on a accepté le risque résiduel. 
