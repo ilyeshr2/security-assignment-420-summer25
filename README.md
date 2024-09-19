@@ -1173,6 +1173,12 @@ document.getElementById('backupButton').addEventListener('click', function() {
 </body>
 
 ```
+![f12](https://github.com/user-attachments/assets/c3caa873-a02f-4401-9ce3-5a63357823aa)
 
+![f13](https://github.com/user-attachments/assets/5c757a27-63ad-4823-a9be-42128dbedc4f)
 
-###Finalement : on a accepté le risque résiduel. 
+![f14](https://github.com/user-attachments/assets/5c116240-53dc-4c96-bf1f-c2f84a0636ed)
+
+![f16](https://github.com/user-attachments/assets/947f8c79-3866-4991-8679-f61fedb4f1d5)
+
+### Finalement : on a accepté le risque résiduel. 
