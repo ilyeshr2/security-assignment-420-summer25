@@ -19,17 +19,7 @@ Les utilisateurs de l'application sont les patients les médecins et les personn
 ### 3. **Modélisation des menaces (Threat Model)**
 La modélisation des menaces est un processus crucial pour identifier les vulnérabilités potentielles et les menaces qui pourraient compromettre la sécurité de l'application. Voici les principales menaces identifiées :
 
-#### a) **Individus malveillants**
-Des hackers peuvent cibler l'application pour accéder aux **dossiers médicaux** des patients, les vendre sur le marché noir ou exiger une rançon pour ne pas divulguer ces données. Ils peuvent utiliser des méthodes comme l'injection SQL, des attaques par force brute, ou encore l'exploitation de failles non corrigées du système.
 
-#### b) **Concurrentes médicales**
-Des entreprises concurrentes pourraient tenter de **voler des informations** sur les patients ou les pratiques de gestion de la clinique pour obtenir un avantage commercial, en espionnant les transactions ou les comportements des patients.
-
-#### c) **Gouvernements**
-Les autorités gouvernementales peuvent rechercher à accéder aux **données sensibles** des utilisateurs pour des raisons juridiques ou d'enquête, mais cela pourrait nuire à la **confidentialité** des patients, surtout si les exigences légales sont mal gérées.
-
-#### d) **Menaces internes**
-Le personnel de la clinique, en particulier les administrateurs et médecins ayant des **accès privilégiés**, pourraient, de manière malveillante ou accidentelle, accéder à des informations non pertinentes, modifiant ainsi l'intégrité des dossiers médicaux.
 
 
 | **Catégorie**       | **Individus**                                                                                         | **Compagnies**                                                                                                  | **Gouvernements**                                                                                              |
