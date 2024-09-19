@@ -743,17 +743,41 @@ cela aurait eu un impact direct sur la sécurité des données sensibles, ainsi 
 
 
 
-#### d) **Interception de données sensibles lors des transmissions**
-- **Menace** : Lors des communications entre les patients et le serveur, des données sensibles peuvent être interceptées si elles ne sont pas chiffrées.
-- **Actifs menacés** : Données médicales et personnelles des patients.
-- **Vulnérabilité** : Absence de chiffrement des échanges (HTTP au lieu de HTTPS).
-- **Impact (gravité)** : Très élevé (vol de données critiques).
-- **Probabilité** : Élevée.
+Je comprends que vous souhaitez discuter du **certificat SSL**. Voici la version complète et correcte de la section sur le certificat SSL :
 
-**Contrôle technique** : Mise en place d’un **certificat SSL** pour garantir que toutes les communications entre le client et le serveur sont chiffrées via HTTPS.
+---
 
-- **Risque initial** : Très élevé.
-- **Risque résiduel après contrôle** : Très faible.
+### d) Certificat SSL :
+
+#### Tableau d’analyse de risque :
+
+| Menace  | Actif  | Vulnérabilité  | Impact (Évaluation de gravité)  | Probabilité (Évaluation de probabilité)  | Contrôles suggérés  |
+| ------- | ------ | -------------- | ------------------------------- | --------------------------------------- | ------------------- |
+| Le risque d'interception de données sensibles lorsqu'elles sont transmises sans être chiffrées.  | - Informations très sensibles <br> - Données personnelles des clients <br> - Informations confidentielles de l'entreprise  | Absence d’un certificat SSL pour crypter l’échange entre le client et le serveur.  | Impact : Élevé <br> - Vol de données sensibles <br> - Perte de confidentialité <br> - Problèmes juridiques <br> - Perte de réputation <br> - Pertes financières | Probabilité : Élevée <br> - Possibilité de vol des données sensibles de l’entreprise et des clients lors de la transmission | - Mettre en place un certificat SSL <br> - Travailler avec le protocole sécurisé HTTPS |
+
+#### Tableau de contrôle implémenté :
+
+| Menace  | Contrôle  | Risque initial  | Risque résiduel  |
+| ------- | --------- | --------------- | ---------------- |
+| Le risque d'interception de données sensibles lorsqu'elles sont transmises sans être chiffrées.  | Mettre en place un certificat SSL et travailler avec le protocole sécurisé HTTPS.  | Impact initial : <br> - Vol de données sensibles <br> - Perte de confidentialité <br> - Problèmes juridiques <br> - Perte de réputation <br> - Pertes financières <br> Impact : Élevé <br> Probabilité : Élevée  | Impact résiduel : <br> - Moindre risque de vol de données sensibles <br> - Probabilité réduite, mais toujours présente pour certaines failles mineures. <br> Impact : Moyen <br> Probabilité : Faible |
+
+---
+
+### Définition de Certificat SSL :
+Un certificat SSL est un protocole de sécurité utilisé pour protéger les données échangées entre le navigateur du client et le serveur Web. Il établit une connexion sécurisée en utilisant le chiffrement, ce qui permet de protéger les données contre les attaques de type "man-in-the-middle", où un attaquant intercepterait et manipulerait les informations échangées.
+
+### Le risque de ne pas mettre en place un certificat SSL :
+Ne pas implémenter un certificat SSL présente des risques majeurs pour la sécurité d'une entreprise. Lors de l'envoi d'informations sensibles sans cryptage, les attaquants peuvent intercepter ces données. Cela entraînerait une perte de confiance des clients, une atteinte à la réputation de l'entreprise, et des sanctions financières ou juridiques.
+
+### Le contrôle : Mise en place d’un certificat SSL :
+Lorsque le certificat SSL est mis en place, toutes les communications entre le client et le serveur sont chiffrées, garantissant que les informations sensibles, telles que les données des clients, ne peuvent pas être facilement interceptées par des attaquants. Cela protège les données lors de leur transmission et assure une navigation sécurisée via le protocole HTTPS. Ce contrôle est essentiel pour la sécurité de tout site web qui manipule des informations sensibles.
+
+### Acceptation du risque :
+Avant la mise en place d’un certificat SSL, l'application web était vulnérable, exposant les données des clients à un risque élevé de vol lors de leur transmission. Cela pouvait avoir des répercussions négatives sur le chiffre d'affaires, la réputation de l'entreprise, et entraîner des conséquences juridiques. Depuis la mise en place de ce contrôle, les risques ont été réduits, bien que non totalement éliminés. Le risque résiduel est maintenant considéré comme acceptable pour l'entreprise.
+
+---
+
+Cette section met en avant l'importance de la mise en place d'un **certificat SSL** pour garantir la confidentialité des données transmises entre les utilisateurs et les serveurs de l'application.
 
 #### e) **Attaque par ransomware**
 - **Menace** : Les hackers peuvent chiffrer les données du serveur avec un ransomware et exiger une rançon pour restaurer l’accès.
