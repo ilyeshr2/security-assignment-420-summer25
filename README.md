@@ -31,14 +31,10 @@ La modélisation des menaces est un processus crucial pour identifier les vulné
 | **Anonymat**        | Les patients peuvent craindre que leur identité et leurs données médicales soient révélées à des tiers, ce qui pourrait nuire à leur vie privée. | Les concurrents pourraient tenter de découvrir l'identité des patients de la clinique pour gagner un avantage concurrentiel. | Les gouvernements peuvent essayer de révéler l'identité des utilisateurs dans le cadre de certaines enquêtes.   |
 |                     | **Gravité : 3**                                                                                      | **Gravité : 2**                                                                                                | **Gravité : 1**                                                                                               |
 
-- **Gravité 1** : Faible
-- **Gravité 2** : Modérée
-- **Gravité 3** : Élevée
 
 
 ### 4. **Analyse des risques et contrôles techniques**
 
-Nous avons identifié six principaux risques pour l’application, ainsi que des mesures de contrôle qui peuvent être mises en place pour atténuer ces risques. Voici une analyse détaillée de chacun des risques, leur probabilité, impact, et les contrôles mis en place pour les atténuer.
 
 #### a) **Attaque par force brute sur le formulaire de connexion**
 
@@ -54,18 +50,15 @@ Nous avons identifié six principaux risques pour l’application, ainsi que des
 
 | **Menace**                                                                                         | **Contrôle**                                                                                                                                                 | **Risque initial**                                                                                                                                                                                                                      | **Risque résiduel après contrôle**                                                                                                                                                                                                                                                                               |
 |----------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Attaque par force brute sur les mots de passe pour accéder aux comptes utilisateurs (patients, médecins) | Mise en place d'un parefeu pfSense  pour limiter le nombre de tentatives de connexion autorisées à partir d'une adresse IP. | **élevé** : <br> Le risque initial est **élevé** car il n'y a pas de limite sur les tentatives de connexion. donc un attaquant peut essayer un grand nombre de combinaisons de mots de passe jusqu'à ce qu'il réussisse. Les informations sensibles des patients, dont les dossiers médicaux, pourraient être compromises. **L'impact** sur la confidentialité, la réputation et les obligations légales de la clinique serait **très grave**. | **Faible** : <br> (probabilité diminuée, mais toujours présente, avec une sécurité renforcée). Le risque est maintenant considéré comme acceptable. |
+| Attaque par force brute sur les mots de passe pour accéder aux comptes utilisateurs (patients, médecins) | Mise en place d'un parefeu pfSense  pour limiter le nombre de tentatives de connexion autorisées à partir d'une adresse IP. | **élevé** : <br> Le risque initial est **élevé** car il n'y a pas de limite sur les tentatives de connexion. donc un attaquant peut essayer un grand nombre de combinaisons de mots de passe jusqu'à ce qu'il réussisse. Les informations sensibles des patients, dont les dossiers médicaux, pourraient être compromises. **L'impact** sur la confidentialité, la réputation et les obligations légales de la clinique serait **grave**. | **Faible** : <br> (probabilité diminuée, mais toujours présente, avec une sécurité renforcée). Le risque est maintenant considéré comme acceptable. |
 
 ##	**Le risque d’attaque force brute** 
 
-- Une attaque par force brute consiste à tester, l’une après l’autre, chaque combinaison possible d’un mot de passe pour un identifiant donné afin se connecter au service ciblé (les données médicaux dans notre cas).
-- Cette menace met en péril les informations medicales personnelles stockées sur notre site ainsi que la réputation et les revenus de notre entreprise.
+- Une attaque par force brute consiste à tester, l’une après l’autre, chaque combinaison possible d’un mot de passe pour un identifiant donné afin se connecter au service ciblé (les données médicaux dans notre cas). Cette menace met en péril les informations medicales personnelles stockées sur notre site ainsi que la réputation et les revenus de notre entreprise.
 
 ##	**Le contrôle : Pare-feu (PfSense)** 
 
-- Ces solutions peuvent bloquer ou ralentir considérablement les assauts, permettant nous de prendre des mesures proactives avant qu’une brèche ne soit exploitée.
-
-- PfSense, limitent le nombre de requêtes qu’un utilisateur peut faire à un service donné, empêchant ainsi les attaques automatisées de saturer les systèmes avec des tentatives de connexion incessantes.
+Le pare-feu peut aider à prévenir les attaques de force brute en limitant le nombre de tentatives de connexion autorisées, en bloquant les adresses IP suspectes et en minimisant la pression sur les ressources du serveur.
 
 ## **Acceptation de risque :**
 
@@ -89,7 +82,6 @@ Nous avons identifié six principaux risques pour l’application, ainsi que des
    - **Action:** `Block`
    - **interface:** `WAN`.
    - **protocol:** `TCP`
-   - **Source:** 2048 `any`.
    - **Destination:** `This firewall (self)`.
    - **destination Port Range:** `SSH (22)`
    - Click `Save`.
@@ -110,7 +102,7 @@ Une fois que la règle est configurée, pfSense bloquera automatiquement les adr
 
 | **Menace**                                                                                         | **Actifs menacés**                                           | **Vulnérabilité**                                                          | **Impact (gravité)**                                                                                                                                                                                                                             | **Probabilité**                                                                                                                                                        | **Contrôles suggérés**                                                                                                                                                                                                                      |
 |----------------------------------------------------------------------------------------------------|-------------------------------------------------------------|----------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Accès non authentifié pouvant entraîner le vol d'informations sensibles (dossiers médicaux) | - Données utilisateur <br> - Dossiers médicaux <br> - Informations personnelles | Absence de mécanisme d'authentification solide (nom d'utilisateur et mot de passe) | **Impact : Très élevé** <br> Le vol des données sensibles (dossiers médicaux) peut entraîner de graves répercussions : violation de la confidentialité des patients, impact sur la réputation de la clinique, pertes financières, poursuites judiciaires. | **Probabilité : Élevée** <br> En l'absence de mécanisme d'authentification, l'accès non autorisé devient facile, augmentant significativement le risque de vol de données. | Mettre en place une **authentification solide** avec nom d'utilisateur et mot de passe, et activer des mesures supplémentaires comme l'authentification multi-facteurs (MFA). |
+| Accès non authentifié pouvant entraîner le vol d'informations sensibles (dossiers médicaux) | - Données utilisateur <br> - Dossiers médicaux <br> - Informations personnelles | Absence de mécanisme d'authentification solide (nom d'utilisateur et mot de passe) | **Impact :  élevé** <br> Le vol des données sensibles (dossiers médicaux) peut entraîner de graves répercussions dont la violation de la confidentialité des patients, impact sur la réputation de la clinique, pertes financières, poursuites judiciaires. | **Probabilité : Élevée** <br> Une grande possibilité de vol (facilement) | Mettre en place une **authentification solide** avec nom d'utilisateur et mot de passe. |
 
 ---
 
@@ -118,31 +110,30 @@ Une fois que la règle est configurée, pfSense bloquera automatiquement les adr
 
 | **Menace**                                                                                         | **Contrôle**                                                                                   | **Risque initial**                                                                                                                                                                                    | **Risque résiduel**                                                                                                                                                                                                                         |
 |----------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Accès non authentifié pouvant entraîner le vol d'informations sensibles (dossiers médicaux) | Mettre en place une authentification solide (nom d'utilisateur et mot de passe), associée à l'authentification multi-facteurs (MFA) | **Impact initial** : Très élevé <br> - Fraude potentielle <br> - Violation de la confidentialité des patients <br> - Répercussions juridiques <br> - Impact direct sur la réputation et les revenus de la clinique. <br> **Probabilité : Très élevée** | **Impact résiduel** : Moyen <br> - Accès réduit aux données sensibles <br> - La fraude et la violation de données sont mieux contrôlées <br> **Probabilité : Moyenne** (grâce à l'authentification renforcée, mais le risque n'est pas complètement éliminé). |
+| Accès non authentifié pouvant entraîner le vol d'informations sensibles (dossiers médicaux) | Mettre en place une authentification solide (nom d'utilisateur et mot de passe) | **Impact initial** :  élevé <br> - Fraude potentielle <br> - Violation de la confidentialité des patients <br> - Répercussions juridiques <br> - Impact direct sur la réputation et les revenus de la clinique. <br> **Probabilité :  élevée** | **Impact résiduel** : Moyen <br> - Accès réduit aux données sensibles <br> - La fraude et la violation de données sont mieux contrôlées <br> **Probabilité : Moyenne** (grâce à l'authentification renforcée, mais le risque n'est pas complètement éliminé). |
 
 ---
 
 #### **Risque de ne pas mettre en place une authentification par mot de passe** :  
-Sans authentification par mot de passe, les attaquants peuvent accéder facilement aux données sensibles stockées sur l'application, y compris les informations personnelles et médicales des patients, ainsi que les dossiers financiers. Cela expose l'application à de graves conséquences légales et à une atteinte majeure à sa réputation.
+Sans authentification par mot de passe, les attaquants peuvent accéder facilement aux données sensibles stockées sur l'application, comme les informations personnelles et médicales des patients, ainsi que les dossiers financiers. Cela expose l'application à de graves conséquences légales et à une atteinte majeure à sa réputation.
 
 #### **Le contrôle : Authentification avec nom d'utilisateur et mot de passe**  
-L'authentification avec nom d'utilisateur et mot de passe, combinée à une authentification multi-facteurs (MFA), améliore considérablement la sécurité des comptes utilisateurs. Cette mesure prévient l'accès non autorisé et réduit la probabilité de vol de données sensibles. Ce contrôle est essentiel pour assurer la sécurité et la confiance des utilisateurs dans l'application.
+L'authentification avec nom d'utilisateur et mot de passe est très importante pour la sécurité de notre site web. Lorsque nous avons implémenté ce contrôle, nous avons réduit la probabilité de graves impacts et nous pouvons maintenant accepter le risque
 
 #### **Acceptation de risque** :  
-Avant l’implémentation de l'authentification avec mot de passe et MFA, l'application web était extrêmement vulnérable, et le risque de vol de données était élevé, avec un impact potentiel négatif sur la réputation et les revenus de la clinique. Depuis l'implémentation du contrôle, le risque a été réduit à un niveau acceptable. Bien que la probabilité de risque ait diminué, elle n’a pas complètement disparu. Toutefois, elle est désormais considérée comme **moyenne**, ce qui est acceptable dans le cadre des activités de l’entreprise.
+Avant l’implémentation de l'authentification avec mot de passe, l'application web était  vulnérable, et le risque de vol de données était élevé, avec un impact potentiel négatif sur la réputation et les revenus de la clinique. Depuis l'implémentation du contrôle, le risque a été réduit à un niveau acceptable. Bien que la probabilité de risque ait diminué, elle n’a pas complètement disparu. Toutefois, elle est désormais considérée comme **moyenne**, ce qui est acceptable dans le cadre des activités de l’entreprise.
 
 ---
 
 ### **Étapes pour la mise en place de l'authentification par mot de passe avec Apache**
 
 #### **1. Configuration du fichier de site Apache**
-Accédez au répertoire de configuration du site web et modifiez le fichier de configuration Apache correspondant au site à protéger (tpiliesharrache.grasset dans notre demonstration):
-
+Dans le fichier de configuration du site web à protéger (dans /etc/apache2/sites-available/)
 ```bash
 sudo vim /etc/apache2/sites-available/tpiliesharrache.conf
 ```
 
-Ajoutez la ligne suivante pour indiquer qu'une authentification par mot de passe sera requise dans le répertoire :
+ on ajoute :
 
 ```apache
 ServerName tpiliesharrache.grasset
@@ -155,20 +146,19 @@ DocumentRoot /var/www/public_html
 </Directory>
 ```
 
-Enregistrez les modifications et fermez le fichier `wq!`.
 
 ![5](https://github.com/user-attachments/assets/3809b844-16ba-4ed2-ac3c-29b3cca2b6bc)
 
 
 #### **2. Création du fichier `.htaccess`**
 
-Dans le répertoire racine du site, créez un fichier `.htaccess`:
+Dans le répertoire racine du site, on va cree `.htaccess`:
 
 ```bash
 sudo vim /var/www/tpiliesharrache/public_html/.htaccess
 ```
 
-Ajoutez les directives suivantes pour activer l’authentification et restreindre l’accès :
+et ajoutez :
 
 ```apache
 AuthType Basic
@@ -177,19 +167,17 @@ AuthUserFile /var/www/tpiliesharrache/.htpasswd
 Require valid-user
 ```
 
-Enregistrez et quittez (`wq!`).
 
 ![6](https://github.com/user-attachments/assets/ae0171ce-7273-4c16-ace6-5bdd00ec77b2)
 
 
 #### **3. Création du fichier `.htpasswd`**
-Créez le fichier `.htpasswd` dans lequel seront stockés les noms d’utilisateur et les mots de passe.
+on cree le fichier `.htpasswd` 
 
 ```bash
 sudo htpasswd -c /var/www/tpiliesharrache/.htpasswd ilies
 ```
 
-- Le paramètre `-c` crée le fichier `.htpasswd` s'il n'existe pas déjà. Si vous ajoutez plusieurs utilisateurs, ne répétez pas l'option `-c` pour ne pas écraser les utilisateurs existants.
 
 on est invité à entrer un mot de passe pour l’utilisateur `ilies` dans mon cas jai choisi `123`.
 
@@ -198,7 +186,7 @@ on est invité à entrer un mot de passe pour l’utilisateur `ilies` dans mon c
 
 
 #### **4. Redémarrage d'Apache**
-Après avoir modifié la configuration et créé le fichier `.htpasswd`, on redémarre Apache pour appliquer les changements :
+on redémarre Apache pour appliquer les changements :
 
 ```bash
 sudo systemctl restart apache2
@@ -242,7 +230,7 @@ Dans notre **application médicale**, nous stockons des données sensibles dans 
 
 ### Explication de la validation dans l'application de films
 
-Dans notre application de films, nous récupérons les informations depuis une API externe et les stockons dans IndexedDB. Chaque film comporte des informations critiques comme `id`, `title`, `description`, `release_date`, `image`, et `movie_banner`. Il est crucial de valider ces données avant leur insertion pour éviter que des données malveillantes ou corrompues ne compromettent l'application.
+Dans notre application de films, nous récupérons les informations depuis une API externe et les stockons dans IndexedDB. Chaque film comporte des informations critiques comme `id`, `title`, `description` Il est crucial de valider ces données avant leur insertion pour éviter que des données malveillantes ou corrompues ne compromettent l'application.
 
 
 ### Exemple d'objet stocké dans IndexedDB :
@@ -528,17 +516,14 @@ function displayFilms(films) {
 
 // Test d'un objet malveillant sans validation
 function testMaliciousObject() {
-  const maliciousFilm = {
-    id: "123",  
-    title: "Malicious Movie",  
-    release_date: "2021",  
+  const film = {
+    title: "film corompu",    
     image: "invalid_image.jpg",  
-    description: "site non securise attempts XSS.",
-    url: "https://example.com/malicious-movie"  
+    description: "site non securise attempts XSS.",  
   };
 
   console.log("Tentative de stockage d'un objet malveillant sans validation.");
-  storeFilms([maliciousFilm]); // Stocker et afficher l'objet malveillant sans validation
+  storeFilms([film]); // Stocker et afficher l'objet malveillant sans validation
 }
 
 // Initialiser la base de données au chargement de la page
@@ -635,21 +620,10 @@ function validateFilm(film) {
   const releaseYearRegex = /^\d{4}$/;
   const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
 
-  // Validation de l'ID
-  if (!film.id || typeof film.id !== 'string' || film.id.trim().length === 0) {
-    console.error("L'ID du film est invalide ou manquant.");
-    return false;
-  }
 
   // Validation du titre
   if (!film.title || typeof film.title !== 'string' || film.title.trim().length === 0) {
     console.error("Le titre du film est invalide ou manquant.");
-    return false;
-  }
-
-  // Validation de la date de sortie (année)
-  if (!releaseYearRegex.test(film.release_date)) {
-    console.error("La date de sortie du film est invalide.");
     return false;
   }
 
@@ -671,15 +645,12 @@ function validateFilm(film) {
 
 // Test d'un objet malveillant avec validation
 function testMaliciousObject() {
-  const maliciousFilm = {
-    id: "123",  // ID fictif
-    title: "Malicious Movie",  // Titre malveillant
-    release_date: "2021",  // Date valide
-    image: "invalid_image.jpg",  // Image invalide pour déclencher onerror
-    onErrorScript: "alert('XSS Injection via onerror!')",  // Script injecté via onerror
-    description: "This is a malicious movie object that attempts XSS.",
-    url: "https://example.com/malicious-movie"  // URL correcte mais l'image est malveillante
+  const film = {
+    title: "film corompu",    
+    image: "invalid_image.jpg",  
+    description: "site non securise attempts XSS.",  
   };
+
 
   // Valider l'objet malveillant
   if (validateFilm(maliciousFilm)) {
@@ -712,14 +683,8 @@ avec cette série de tests on a démontré l'importance de la validation des don
 Avant la mise en place des mécanismes de validation des données,  nos bases de données étaient vulnérables aux injections d'objets malveillants. Cela aurait pu entraîner la corruption des données, un dysfonctionnement de l'application, et dans le cas de l'application médicale, une violation de la confidentialité des patients.
 cela aurait eu un impact direct sur la sécurité des données sensibles, ainsi qu'un risque de non-conformité avec les réglementations sur la protection des données médicales.
 
----
 
-
-
-
-
-
-Je comprends que vous souhaitez discuter du **certificat SSL**. Voici la version complète et correcte de la section sur le certificat SSL :
+### Finalement : on a accepté le risque résiduel. 
 
 ---
 
@@ -740,16 +705,17 @@ Je comprends que vous souhaitez discuter du **certificat SSL**. Voici la version
 ---
 
 ### Définition de Certificat SSL :
-Un certificat SSL est un protocole de sécurité utilisé pour protéger les données échangées entre le navigateur du client et le serveur Web. Il établit une connexion sécurisée en utilisant le chiffrement, ce qui permet de protéger les données contre les attaques de type "man-in-the-middle", où un attaquant intercepterait et manipulerait les informations échangées.
+Un certificat SSL est un protocole de sécurité utilisé pour protéger les données échangées entre le navigateur du client et le serveur Web. Ce protocole utilise un fichier électronique pour établir une connexion sécurisée, ce qui permet de crypter les données échangées. Grâce à ce cryptage, les données sont protégées contre les attaquants qui pourraient tenter de les intercepter ou de les manipuler.
+
 
 ### Le risque de ne pas mettre en place un certificat SSL :
-Ne pas implémenter un certificat SSL présente des risques majeurs pour la sécurité d'une entreprise. Lors de l'envoi d'informations sensibles sans cryptage, les attaquants peuvent intercepter ces données. Cela entraînerait une perte de confiance des clients, une atteinte à la réputation de l'entreprise, et des sanctions financières ou juridiques.
+Ne pas mettre en place certificat SSL mène à des risques graves contre notre entreprise. Les attaquants réussissent à obtenir nos données sensibles. Alors les clients perdre confiance en notre entreprise et cela peut avoir un impact négatif sur la réputation. Cela peut également entraîner des pertes financières, des sanctions réglementaires et des poursuites judiciaires.
 
 ### Le contrôle : Mise en place d’un certificat SSL :
-Lorsque le certificat SSL est mis en place, toutes les communications entre le client et le serveur sont chiffrées, garantissant que les informations sensibles, telles que les données des clients, ne peuvent pas être facilement interceptées par des attaquants. Cela protège les données lors de leur transmission et assure une navigation sécurisée via le protocole HTTPS. Ce contrôle est essentiel pour la sécurité de tout site web qui manipule des informations sensibles.
+En examinant un certificat SSL, nous pouvons voir que les données sensibles sont cryptées lorsqu'elles sont transmises entre le navigateur et le serveur Web. Cela renforce la sécurité et empêche les attaquants de récupérer ces données lors de leur transmission. Donc ce contrôle est très important pour la sécurité de notre site web. Lorsque nous avons implémenté ce contrôle, nous avons réduit la probabilité de graves impacts et nous pouvons maintenant accepter le risque.
 
 ### Acceptation du risque :
-Avant la mise en place d’un certificat SSL, l'application web était vulnérable, exposant les données des clients à un risque élevé de vol lors de leur transmission. Cela pouvait avoir des répercussions négatives sur le chiffre d'affaires, la réputation de l'entreprise, et entraîner des conséquences juridiques. Depuis la mise en place de ce contrôle, les risques ont été réduits, bien que non totalement éliminés. Le risque résiduel est maintenant considéré comme acceptable pour l'entreprise.
+Avant d'implémenter le contrôle certificat SSL, notre application web était vulnérable, augmentant le risque de vol d'informations de nos clients. Cela aurait pu avoir un impact négatif sur notre revenu et notre réputation d'entreprise. Depuis la mise en place de ce contrôle, les impacts sont diminués et la probabilité de risque a diminué, mais cela ne signifie pas qu'elle a été éliminée à 100%. La probabilité de risque est désormais considérée comme moyenne, ce qui est acceptable pour l'entreprise.
 
 ---
 
@@ -804,8 +770,6 @@ SSLStaplingCache "shmcb:logs/stapling-cache(150000)"
 # Requires Apache >= 2.4.11
 SSLSessionTickets Off
 ```
-
-elle va désactiver les anciennes versions de SSL et TLS et configurer des en-têtes de sécurité supplémentaires.
 
 
 ![ssl2](https://github.com/user-attachments/assets/e881877d-3fed-4a90-8e18-5bdbd82b7bb3)
@@ -871,7 +835,7 @@ AH00558: apache2: Could not reliably determine the server's fully qualified doma
 Syntax OK
 ```
 
-Enfin, redémarrez Apache pour appliquer les changements :
+puis :
 
 ```bash
 sudo systemctl restart apache2
@@ -889,7 +853,7 @@ sudo systemctl restart apache2
 Pour permettre l'accès au HTTPS sur le réseau, on doit ouvrir le port 443 dans pfSense.
 
 1. Connecter l'interface web de pfSense.
-2. Allez dans **Firewall > Rules**.
+2. **Firewall > Rules**.
 3. Sous l'onglet **WAN**, ajouter une nouvelle règle :
    - **Filter rule association** : Pass
    - **Interface** : WAN
@@ -908,7 +872,6 @@ Pour permettre l'accès au HTTPS sur le réseau, on doit ouvrir le port 443 dans
 
 ### Étape 8 : Tester le site dans Chrome
 
-Sur la machine locale, ouvrer **Google Chrome** et testez le site sécurisé en visitant :
 
 ```
 https://tpiliesharrache.grasset
@@ -952,7 +915,7 @@ Une fois installer, Vider le cache de votre navigateur et le redémarrer :.
 
 | Menace                              | Actif                              | Vulnérabilité                                                    | Impact (Évaluation de gravité)                                                                                                       | Probabilité (Évaluation de probabilité)                                      | Contrôles suggérés                                         |
 | ------------------------------------ | ---------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| Attaque de Ransomware (Ransom-logiciel) | - Fonctionnement du site <br> - Données sensibles de l'entreprise | Absence de politiques de sécurité robustes et de sauvegardes régulières | Impact : Élevé <br> - Perte de productivité <br> - Perte de données critiques <br> - Atteinte à la réputation de l’entreprise <br> - Pertes financières importantes  | Probabilité : Moyenne <br> - Risque de paralysie totale du site en cas d’attaque de ransomware | - Implémentation de politiques de sauvegarde régulières <br> - Création de copies régulières et sécurisées des données sensibles de l'entreprise |
+| Attaque de Ransomware  | - Fonctionnement du site <br> - Données sensibles de l'entreprise | Absence de politiques de sécurité robustes et de sauvegardes régulières | Impact : Élevé <br> - Perte de productivité <br> - Perte de données critiques <br> - Atteinte à la réputation de l’entreprise <br> - Pertes financières importantes  | Probabilité : Moyenne <br> - Risque de paralysie totale du site en cas d’attaque de ransomware | - Implémentation de politiques de sauvegarde régulières <br> - Création de copies régulières et sécurisées des données sensibles de l'entreprise |
 
 ---
 
@@ -960,7 +923,7 @@ Une fois installer, Vider le cache de votre navigateur et le redémarrer :.
 
 | Menace                              | Contrôle                                                                                          | Risque initial                                                                                                         | Risque résiduel                                      |
 | ------------------------------------ | ------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| Attaque de Ransomware (Ransom-logiciel) | Mise en place de politiques de sauvegarde (backups) pour créer des copies sécurisées des données | Impact initial : <br> - Perte de productivité <br> - Perte de données <br> - Dommages financiers et atteinte à la réputation | Impact résiduel : <br> - Réduction des temps d'arrêt <br> - Récupération plus rapide après une attaque <br> Impact : Moyen <br> Probabilité : Faible |
+| Attaque de Ransomware | Mise en place de politiques de sauvegarde (backups) pour créer des copies sécurisées des données | Impact initial : <br> - Perte de productivité <br> - Perte de données <br> - Dommages financiers et atteinte à la réputation | Impact résiduel : <br> - Réduction des temps d'arrêt <br> - Récupération plus rapide après une attaque <br> Impact : Moyen <br> Probabilité : Faible |
 
 ---
 
@@ -970,11 +933,11 @@ Les **backups** sont des copies de sécurité des données essentielles de l’e
 
 ### Le risque de ne pas mettre en place des sauvegardes :
 
-Sans la mise en place de sauvegardes, l’entreprise s'expose à des risques graves. En cas d’attaque de ransomware, les attaquants peuvent chiffrer les données et en exiger une rançon pour les déverrouiller. Cela paralyserait le fonctionnement du site, causerait une perte d'accès aux données essentielles et aurait des conséquences financières et juridiques graves. La réputation de l’entreprise en serait également fortement affectée, car les clients perdraient confiance dans la capacité de l’entreprise à protéger leurs informations.
+Sans la mise en place de sauvegardes, en cas d’attaque de ransomware, les attaquants peuvent chiffrer les données et en exiger une rançon pour les déverrouiller. Cela paralyserait le fonctionnement du site, causerait une perte d'accès aux données essentielles et aurait des conséquences financières et juridiques graves. La réputation de l’entreprise en serait également fortement affectée, car les clients perdraient confiance dans la capacité de l’entreprise à protéger leurs informations.
 
 ### Le contrôle : Mise en place de sauvegardes régulières :
 
-En mettant en œuvre des scripts de sauvegarde réguliers, l’entreprise peut créer des copies de sécurité de ses données critiques, ce qui permet de restaurer l'intégrité des systèmes en cas d'attaque ou de panne. Les sauvegardes doivent être stockées dans des emplacements sécurisés (comme un cloud chiffré ou un serveur dédié) et testées régulièrement pour s'assurer qu'elles sont valides. Ce contrôle est essentiel pour assurer la continuité des activités et limiter les dégâts causés par une attaque.
+En mettant en oeuvre des scripts de sauvegarde réguliers, l’entreprise peut créer des copies de sécurité de ses données critiques, ce qui permet de restaurer l'intégrité des systèmes en cas d'attaque ou de panne.
 
 ### Acceptation du risque :
 
@@ -984,10 +947,9 @@ Avant l'implémentation des sauvegardes, l'application web et les données étai
 
 ### Remarque :
 
-Les sauvegardes sont une solution de protection contre plusieurs types de menaces, notamment :
-- **Les pannes matérielles** : Une défaillance matérielle peut entraîner la perte de données. Les sauvegardes permettent de restaurer les données après réparation.
-- **Attaques de ransomware** : Les attaquants qui chiffrent les données pour exiger une rançon n’ont plus de pouvoir si des sauvegardes existent.
-- **Catastrophes naturelles** : Les sauvegardes externes (cloud ou serveur distant) permettent de protéger les données en cas de sinistre physique.
+Les backups c’est un contrôle pour plusieurs menaces : panne materielle, une attaque de ransomware ou une catastrophe naturelle
+
+
 
 Il est crucial de tester régulièrement les sauvegardes pour garantir leur fiabilité. Ne pas vérifier les sauvegardes avant d'en avoir besoin peut entraîner des pertes supplémentaires en cas de problèmes avec les données de récupération.
 
@@ -1016,32 +978,33 @@ header('Content-Type: application/json');
 
 $backupDir = '/var/www/tpiliesharrache/backups/';
 
-// Check if backup directory exists, if not, create it
+// Vérifier si le répertoire de sauvegarde existe, sinon le créer
 if (!file_exists($backupDir)) {
     if (!mkdir($backupDir, 0755, true)) {
-        echo json_encode(['status' => 'error', 'message' => 'Failed to create backup directory.']);
+        echo json_encode(['status' => 'error', 'message' => 'Échec de la création du répertoire de sauvegarde.']);
         exit;
     }
 }
 
-// Get JSON data from request body
+// Récupérer les données JSON du corps de la requête
 $data = json_decode(file_get_contents('php://input'), true);
 
 if (!$data) {
-    echo json_encode(['status' => 'error', 'message' => 'No data received.']);
+    echo json_encode(['status' => 'error', 'message' => 'Aucune donnée reçue.']);
     exit;
 }
 
-// Generate a filename with the current date and time
+// Générer un nom de fichier avec la date et l'heure actuelles
 $backupFile = $backupDir . 'backup_' . date('Y-m-d_H-i-s') . '.json';
 
-// Save the data to the backup file
+// Enregistrer les données dans le fichier de sauvegarde
 if (file_put_contents($backupFile, json_encode($data, JSON_PRETTY_PRINT))) {
-    echo json_encode(['status' => 'success', 'file' => $backupFile, 'message' => 'Backup has been saved successfully.']);
+    echo json_encode(['status' => 'success', 'file' => $backupFile, 'message' => 'La sauvegarde a été enregistrée avec succès.']);
 } else {
-    echo json_encode(['status' => 'error', 'message' => 'Failed to save the backup file.']);
+    echo json_encode(['status' => 'error', 'message' => 'Échec de l\'enregistrement du fichier de sauvegarde.']);
 }
 ?>
+
 ```
 
 - Le script vérifie si le répertoire de sauvegarde existe. Si ce n'est pas le cas, il tente de créer le répertoire avec les autorisations appropriées. Si la création du répertoire échoue, il renvoie une erreur
@@ -1064,7 +1027,6 @@ sudo vim /etc/apache2/sites-available/tpiliesharrache.conf
     Require all granted
 </Directory>
 
-# Enable PHP handling
 AddType application/x-httpd-php .php
 
 ```
