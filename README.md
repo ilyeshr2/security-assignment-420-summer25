@@ -102,7 +102,7 @@ Une fois que la règle est configurée, pfSense bloquera automatiquement les adr
 
 | **Menace**                                                                                         | **Actifs menacés**                                           | **Vulnérabilité**                                                          | **Impact (gravité)**                                                                                                                                                                                                                             | **Probabilité**                                                                                                                                                        | **Contrôles suggérés**                                                                                                                                                                                                                      |
 |----------------------------------------------------------------------------------------------------|-------------------------------------------------------------|----------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Accès non authentifié pouvant entraîner le vol d'informations sensibles (dossiers médicaux) | - Données utilisateur <br> - Dossiers médicaux <br> - Informations personnelles | Absence de mécanisme d'authentification solide (nom d'utilisateur et mot de passe) | **Impact :  élevé** <br> Le vol des données sensibles (dossiers médicaux) peut entraîner de graves répercussions dont la violation de la confidentialité des patients, impact sur la réputation de la clinique, pertes financières, poursuites judiciaires. | **Probabilité : Élevée** <br> Une grande possibilité de vol (facilement) | Mettre en place une **authentification solide** avec nom d'utilisateur et mot de passe. |
+| Accès non authentifié pouvant entraîner le vol d'informations sensibles (dossiers médicaux) | - Données utilisateur <br> - Dossiers médicaux <br> - Informations personnelles | Absence de mécanisme d'authentification solide (nom d'utilisateur et mot de passe) | **Impact :  élevé** <br> Le vol des données sensibles (dossiers médicaux) peut entraîner de graves répercussions dont la violation de la confidentialité des patients, impact sur la réputation de la clinique, pertes financières, poursuites judiciaires. | **Probabilité : Élevée** <br> Une grande possibilité de vol (facilement) | Mettre en place une **authentification solide** <br> avec nom d'utilisateur et mot de passe. |
 
 ---
 
@@ -215,7 +215,7 @@ Dans notre **application médicale**, nous stockons des données sensibles dans 
 
 | **Menace**                                                                                         | **Actifs menacés**                                           | **Vulnérabilité**                                                                                                      | **Impact (gravité)**                                                                                                                                                         | **Probabilité**                                                                                                         | **Contrôles suggérés**                                                                                 |
 |----------------------------------------------------------------------------------------------------|-------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
-| Injections ou manipulations de données malveillantes dans IndexedDB                                | - Données sensibles (profils patients, historique médical) <br> - Intégrité de la base de données <br> - Fonctionnement de l'application | Absence de validation stricte des entrées et absence de mécanismes de vérification de l'intégrité des objets stockés dans IndexedDB | **Impact : Très élevé** <br> - Corruption des données sensibles <br> - Atteinte à la confidentialité des patients <br> - Violation des lois sur la protection des données médicales | **Probabilité : Moyenne** <br> Les injections malveillantes peuvent provenir de failles d'API ou d'entrées non sécurisées | - Validation stricte des données à l'entrée <br> - Contrôles après chaque transaction dans IndexedDB <br> - Chiffrement des données sensibles |
+| Injections ou manipulations de données malveillantes dans IndexedDB                                | - Données sensibles (profils patients, historique médical) <br> - Intégrité de la base de données <br> - Fonctionnement de l'application | Absence de validation stricte des entrées et absence de mécanismes de vérification de l'intégrité des objets stockés dans IndexedDB | **Impact : Très élevé** <br> - Corruption des données sensibles <br> - Atteinte à la confidentialité des patients <br> - Violation des lois sur la protection des données médicales | **Probabilité : Moyenne** <br> Les injections malveillantes peuvent provenir de <br> failles d'API ou d'entrées non sécurisées | - Validation stricte des <br> données à l'entrée <br> - Contrôles après chaque transaction dans IndexedDB <br> - Chiffrement des données sensibles |
 
 ---
 
@@ -244,27 +244,30 @@ Un objet typique que nous stockons dans IndexedDB peut être une fiche de film p
   "title": "Castle in the Sky",
   "original_title": "天空の城ラピュタ",
   "original_title_romanised": "Tenkū no shiro Rapyuta",
-  "image": "https://image.tmdb.org/t/p/w600_and_h900_bestv2/npOnzAbLh6VOIu3naU5QaEcTepo.jpg",
-  "movie_banner": "https://image.tmdb.org/t/p/w533_and_h300_bestv2/3cyjYtLWCBE1uvWINHFsFnE8LUK.jpg",
-  "description": "The orphan Sheeta inherited a mysterious crystal that links her to the mythical sky-kingdom of Laputa...",
+  "image": "https://image.tmdb.org/t/p/w600_and_h900_bestv2/
+  npOnzAbLh6VOIu3naU5QaEcTepo.jpg",
+  "movie_banner": "https://image.tmdb.org/t/p/
+  w533_and_h300_bestv2/3cyjYtLWCBE1uvWINHFsFnE8LUK.jpg",
+  "description": "The orphan Sheeta inherited a mysterious
+  crystal that links her to the mythical sky-kingdom of Laputa...",
   "director": "Hayao Miyazaki",
   "producer": "Isao Takahata",
   "release_date": "1986",
   "running_time": "124",
   "rt_score": "95",
   "people": [
-    "https://ghibliapi.vercel.app/people/598f7048-74ff-41e0-92ef-87dc1ad980a9"
+    "https://ghibliapi.vercel.app/people/598f7048-74ff-41e0-92ef"
   ],
   "species": [
-    "https://ghibliapi.vercel.app/species/af3910a6-429f-4c74-9ad5-dfe1c4aa04f2"
+    "https://ghibliapi.vercel.app/species/af3910a6-429f-4c74-9ad5"
   ],
   "locations": [
     "https://ghibliapi.vercel.app/locations/"
   ],
   "vehicles": [
-    "https://ghibliapi.vercel.app/vehicles/4e09b023-f650-4747-9ab9-eacf14540cfb"
+    "https://ghibliapi.vercel.app/vehicles/4e09b023-f650-4747"
   ],
-  "url": "https://ghibliapi.vercel.app/films/2baf70d1-42bb-4437-b551-e5fed5a87abe"
+  "url": "https://ghibliapi.vercel.app/films/2baf70d1-42bb"
 }
 
 
@@ -283,7 +286,8 @@ function validateFilm(film) {
     return false;
   }
 
-  if (!film.title || typeof film.title !== 'string' || film.title.trim().length === 0) {
+  if (!film.title || typeof film.title !== 'string' ||
+    film.title.trim().length === 0) {
     console.error("Le titre est manquant ou invalide.");
     return false;
   }
@@ -392,28 +396,29 @@ function testValidObject() {
     title: "Castle in the Sky",
     original_title: "天空の城ラピュタ",
     original_title_romanised: "Tenkū no shiro Rapyuta",
-    image: "https://image.tmdb.org/t/p/w600_and_h900_bestv2/npOnzAbLh6VOIu3naU5QaEcTepo.jpg",
-    movie_banner: "https://image.tmdb.org/t/p/w533_and_h300_bestv2/3cyjYtLWCBE1uvWINHFsFnE8LUK.jpg",
-    description: "The orphan Sheeta inherited a mysterious crystal that links her to the mythical sky-kingdom of Laputa...",
+    image: "https://image.tmdb.org/t/p/w600_and_h900_bestv2.jpg",
+    movie_banner: "https://image.tmdb.org/t/p/w533_and_h300_bestv2.jpg",
+    description: "The orphan Sheeta inherited a mysterious
+              crystal that links her to the mythical sky-kingdom of Laputa...",
     director: "Hayao Miyazaki",
     producer: "Isao Takahata",
     release_date: "1986",
     running_time: "124",
     rt_score: "95",
     people: [
-      "https://ghibliapi.vercel.app/people/598f7048-74ff-41e0-92ef-87dc1ad980a9",
-      "https://ghibliapi.vercel.app/people/fe93adf2-2f3a-4ec4-9f68-5422f1b87c01"
+      "https://ghibliapi.vercel.app/people/598f7048-74ff",
+      "https://ghibliapi.vercel.app/people/fe93adf2-2f3a"
     ],
     species: [
-      "https://ghibliapi.vercel.app/species/af3910a6-429f-4c74-9ad5-dfe1c4aa04f2"
+      "https://ghibliapi.vercel.app/species/af3910a6-429f"
     ],
     locations: [
       "https://ghibliapi.vercel.app/locations/"
     ],
     vehicles: [
-      "https://ghibliapi.vercel.app/vehicles/4e09b023-f650-4747-9ab9-eacf14540cfb"
+      "https://ghibliapi.vercel.app/vehicles/4e09b023"
     ],
-    url: "https://ghibliapi.vercel.app/films/2baf70d1-42bb-4437-b551-e5fed5a87abe"
+    url: "https://ghibliapi.vercel.app/films/2baf70d1"
   };
 
   // Stocker et afficher l'objet (sans validation)
@@ -499,10 +504,12 @@ function displayFilms(films) {
 
     // Ici l'attaque XSS est injectée via onerror
     const img = document.createElement('img');
-    img.src = movie.image;  // L'image ne sera pas chargée, et onerror sera déclenché
+    // L'image ne sera pas chargée, et onerror sera déclenché
+    img.src = movie.image;  
     img.alt = movie.title;
     img.onerror = function() {
-        alert('XSS Injection via onerror!');  // Injection du script malveillant via onerror
+    //  Injection du script malveillant via onerror
+        alert('XSS Injection via onerror!');  
     };
 
     card.appendChild(h1);
@@ -634,7 +641,8 @@ function validateFilm(film) {
   }
 
   // Interdire tout script ou injection dans onerror
-  if (film.onErrorScript && /<script>|javascript:|eval\(/.test(film.onErrorScript)) {
+  if (film.onErrorScript &&
+    /<script>|javascript:|eval\(/.test(film.onErrorScript)) {
     console.error("Script malveillant détecté dans onErrorScript.");
     return false;
   }
@@ -654,8 +662,10 @@ function testMaliciousObject() {
 
   // Valider l'objet malveillant
   if (validateFilm(maliciousFilm)) {
-    console.log("L'objet malveillant a été validé (ceci ne devrait pas se produire).");
-    storeFilms([maliciousFilm]); // Stocker et afficher l'objet malveillant si validé
+    console.log("L'objet malveillant a été validé
+     (ceci ne devrait pas se produire).");
+    // Stocker et afficher l'objet malveillant si validé
+    storeFilms([maliciousFilm]); 
   } else {
     console.log("L'objet malveillant a été rejeté par la validation.");
   }
@@ -727,7 +737,10 @@ Avant d'implémenter le contrôle certificat SSL, notre application web était v
 Sur notre serveur web Ubuntu, on va exécutez la commande suivante pour créer un certificat SSL auto-signé.
 
 ```bash
-sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -addext "subjectAltName = DNS:tpiliesharrache.grasset" -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -addext
+ "subjectAltName = DNS:tpiliesharrache.grasset" -keyout
+/etc/ssl/private/apache-selfsigned.key -out
+/etc/ssl/certs/apache-selfsigned.crt
 ```
 
 
@@ -783,7 +796,8 @@ SSLSessionTickets Off
 Faites une copie de sauvegarde de la configuration SSL par défaut d'Apache :
 
 ```bash
-sudo cp /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf.bak
+sudo cp /etc/apache2/sites-available/default-ssl.conf
+/etc/apache2/sites-available/default-ssl.conf.bak
 ```
 
 ---
@@ -915,7 +929,7 @@ Une fois installer, Vider le cache de votre navigateur et le redémarrer :.
 
 | Menace                              | Actif                              | Vulnérabilité                                                    | Impact (Évaluation de gravité)                                                                                                       | Probabilité (Évaluation de probabilité)                                      | Contrôles suggérés                                         |
 | ------------------------------------ | ---------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| Attaque de Ransomware  | - Fonctionnement du site <br> - Données sensibles de l'entreprise | Absence de politiques de sécurité robustes et de sauvegardes régulières | Impact : Élevé <br> - Perte de productivité <br> - Perte de données critiques <br> - Atteinte à la réputation de l’entreprise <br> - Pertes financières importantes  | Probabilité : Moyenne <br> - Risque de paralysie totale du site en cas d’attaque de ransomware | - Implémentation de politiques de sauvegarde régulières <br> - Création de copies régulières et sécurisées des données sensibles de l'entreprise |
+| Attaque de Ransomware  | - Fonctionnement du site <br> - Données sensibles de l'entreprise | Absence de politiques de sécurité robustes et de sauvegardes régulières | Impact : Élevé <br> - Perte de productivité <br> - Perte de données critiques <br> - Atteinte à la réputation de l’entreprise <br> - Pertes financières importantes  | Probabilité : Moyenne <br> - Risque de paralysie totale du site en cas d’attaque de ransomware | - Implémentation de politiques de sauvegarde régulières <br> - Création <br> de copies régulières et sécurisées des données sensibles <br> de l'entreprise |
 
 ---
 
@@ -981,7 +995,8 @@ $backupDir = '/var/www/tpiliesharrache/backups/';
 // Vérifier si le répertoire de sauvegarde existe, sinon le créer
 if (!file_exists($backupDir)) {
     if (!mkdir($backupDir, 0755, true)) {
-        echo json_encode(['status' => 'error', 'message' => 'Échec de la création du répertoire de sauvegarde.']);
+        echo json_encode(['status' => 'error', 'message' =>
+         'Échec de la création du répertoire de sauvegarde.']);
         exit;
     }
 }
@@ -990,7 +1005,8 @@ if (!file_exists($backupDir)) {
 $data = json_decode(file_get_contents('php://input'), true);
 
 if (!$data) {
-    echo json_encode(['status' => 'error', 'message' => 'Aucune donnée reçue.']);
+    echo json_encode(['status' => 'error', 'message' =>
+    'Aucune donnée reçue.']);
     exit;
 }
 
@@ -999,9 +1015,11 @@ $backupFile = $backupDir . 'backup_' . date('Y-m-d_H-i-s') . '.json';
 
 // Enregistrer les données dans le fichier de sauvegarde
 if (file_put_contents($backupFile, json_encode($data, JSON_PRETTY_PRINT))) {
-    echo json_encode(['status' => 'success', 'file' => $backupFile, 'message' => 'La sauvegarde a été enregistrée avec succès.']);
+    echo json_encode(['status' => 'success', 'file' => $backupFile,
+    'message' => 'La sauvegarde a été enregistrée avec succès.']);
 } else {
-    echo json_encode(['status' => 'error', 'message' => 'Échec de l\'enregistrement du fichier de sauvegarde.']);
+    echo json_encode(['status' => 'error', 'message' =>
+    'Échec de l\'enregistrement du fichier de sauvegarde.']);
 }
 ?>
 
@@ -1048,7 +1066,8 @@ Maintenant, dans le code JavaScript, on va ajouter la logique pour que le client
 ```javascript
 function backupData() {
   // Fetch data from IndexedDB
-  const transaction = db.transaction([storeName, logoStoreName], "readonly");
+  const transaction = db.transaction([storeName, logoStoreName],
+   "readonly");
   const filmsStore = transaction.objectStore(storeName);
   const logoStore = transaction.objectStore(logoStoreName);
 
@@ -1094,7 +1113,8 @@ function backupData() {
 }
 
 // Attach backup functionality to button
-document.getElementById('backupButton').addEventListener('click', function() {
+document.getElementById('backupButton').addEventListener('click',
+ function() {
   backupData();
 });
 ```
