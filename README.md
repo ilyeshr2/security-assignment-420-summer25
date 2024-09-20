@@ -1124,7 +1124,7 @@ document.getElementById('backupButton').addEventListener('click', function() {
 
 
 
-### F) Certificat SSL :
+### F) Formation pour les employés  :
 
 #### Tableau d’analyse de risque :
 
