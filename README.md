@@ -1120,3 +1120,45 @@ document.getElementById('backupButton').addEventListener('click', function() {
 ![f16](https://github.com/user-attachments/assets/947f8c79-3866-4991-8679-f61fedb4f1d5)
 
 ### Finalement : on a accepté le risque résiduel. 
+
+
+
+
+### F) Certificat SSL :
+
+#### Tableau d’analyse de risque :
+
+| Menace  | Actif  | Vulnérabilité  | Impact (Évaluation de gravité)  | Probabilité (Évaluation de probabilité)  | Contrôles suggérés  |
+| ------- | ------ | -------------- | ------------------------------- | --------------------------------------- | ------------------- |
+| Phishing et logiciels malveillants.  | - les données sensibles. <br> - les informations financières. <br> - le système de site.  | Employés peuvent être victimes. <br> - Employés clique sur des liens malveillants. - Employés téléchargent des logiciels malveillants   | Impact : Élevé <br> - Vol de données sensibles <br> - Perte donnees <br> - dommage à la réputation de l’entreprise  <br> - Perte de réputation <br> - Pertes financières | Probabilité : Moyenne <br> - une possibilité de Phishing et logiciels malveillants. | - Formation en sécurité pour les employés |
+
+#### Tableau de contrôle implémenté :
+
+| Menace  | Contrôle  | Risque initial  | Risque résiduel  |
+| ------- | --------- | --------------- | ---------------- |
+| Phishing et logiciels malveillants.  |La formation en sécurité pour les employés  | Impact initial : <br> - Vol de données sensibles <br> - Perte de confidentialité <br> - Problèmes juridiques <br> - Perte de réputation <br> - Pertes financières <br> Impact : Élevé <br> Probabilité : Élevée  | Impact résiduel : <br> - dommage à la réputation de l’entreprise  <br> - des pertes financières <br> Impact : Moyen a élevé  <br> Probabilité : Faible |
+
+---
+
+###	Le risque de ne pas faire les formations de sécurité pour les employés et admins de site :
+Ne pas faire des formations de sécurité aux employés à des risques graves contre notre entreprise. Les attaquants surtout les fraudeurs qui font le phishing réussissent à prendre les données. Alors peut avoir un impact négatif. Cela peut également entraîner la perte de nos données (vol) et des pertes financières, et la réputation de l’entreprise.
+
+
+### Le contrôle :   mettre en place des formations de sécurité :
+En mettant des formations de sécurité pour nos employés, nous pouvons protéger nos données confidentielles contre le phishing ou les logiciels malveillant. Ce contrôle renforce la sécurité et empêche les fraudeurs de commit leur acte contre nous. Donc ce contrôle est très important pour la sécurité de notre site web. Lorsque nous avons implémenté ce contrôle, nous avons réduit la probabilité de graves impacts et nous pouvons maintenant accepter le risque.
+
+### Acceptation de risque : 
+Avant de faire des formations de sécurité pour nos admins, notre system était vulnérable, augmentant le risque de vol d’informations. Cela aurait pu avoir un impact négatif sur notre revenu et notre réputation d'entreprise. Depuis la mise en place de ce contrôle, les impacts sont diminués et la probabilité de risque a diminué, mais cela ne signifie pas qu'elle a été éliminée à 100%. La probabilité de risque est désormais considérée comme moyenne, ce qui est acceptable pour l'entreprise.
+
+### Des exemples de formations : 
+
+-	Sensibilisation à la sécurité
+-	Formation sur la conformité réglementaire
+-	Formation sur la sécurité des courriels
+-	Formation sur la sécurité des appareils mobiles
+-	Formation sur la sécurité des réseaux sociaux
+
+Remarque : c’est nécessaire de faire des formations sur la sécurité pour protéger l’entreprise et le system (application web)
+
+
+**Finalement : on a accepté le risque résiduel.**
