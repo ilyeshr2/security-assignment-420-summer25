@@ -4,7 +4,7 @@ Harrache Ilies
 
 ---
 
-## Rapport Complet d'Analyse de Risques pour une Application de Gestion de Rendez-vous Médicaux
+## TP1
 
 ### 1. **Présentation de l'application**
 L'application étudiée est une **plateforme de gestion de rendez-vous médicaux en ligne**, hébergée sur un serveur Ubuntu. Cette application permet aux patients de prendre des rendez-vous avec des médecins, de consulter leur dossier médical en ligne et de recevoir des notifications pour des prescriptions ou des rappels de rendez-vous. Elle est utilisée par des patients, des médecins, et le personnel administratif des cliniques.
